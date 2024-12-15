@@ -1,4 +1,4 @@
-HELP.md
+git remote add origin git@github.com:perepalacin/sos-etseib.gitHELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -33,3 +33,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Logs ###
+logs/
+
+### LOGS ###
+.DS_Store

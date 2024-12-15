@@ -1,0 +1,6 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <div style="visibility: hidden; position: fixed; top: 30px; left: 50%; width: 40%; z-index: 50; transform: translateX(-50%);" id="toast" th:class="'notification ' + ${toastType}">
+        <h5 class="has-text-weight-semibold" th:text="${toastTitle}">Toast Title</h5>
+        <p th:text="${toastMessage}">Toast Message</p>
+      </div>
+</div>

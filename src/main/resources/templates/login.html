@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="cat" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="layout">
 
 <head>
@@ -16,7 +16,7 @@
                 <li><a href="/sign-up">Registra't</a></li>
             </ul>
         </div>
-        <div style="width: 50%;">
+        <div class="is-full-mobile is-half-tablet">
             <h1 class="title">Inicia sessió</h1>
             <h2 class="subtitle">Accedeix a centenars de recursos acadèmics totalment gratuits</h2>
             <form hx-post="/api/v1/auth/sign-in" hx-trigger="submit" hx-target="#auth-card" method="post">

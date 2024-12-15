@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="cat" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="htmx-config" content='{"responseHandling": [{"code":".*", "swap": true}]}'>
     <title th:text="${appName}">My Application</title>
     <script src="https://unpkg.com/htmx.org@2.0.3"
         integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
         crossorigin="anonymous"></script>
+    <style>
+        @keyframes fadein {
+            from {top: 0; opacity: 0;}
+            to {top: 30px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {top: 30px; opacity: 1;}
+            to {top: 0; opacity: 0;}
+        }
+    </style>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
 </head>
 
@@ -98,6 +110,22 @@
         </div>
     </footer>
     <script src="https://kit.fontawesome.com/07d92569e3.js" crossorigin="anonymous"></script>
+<script>
+function showToast() {
+    var toast = document.getElementById("toast");
+    if (toast) {
+        toast.style.visibility = "visible";
+        toast.style.animation = "fadein 0.5s, fadeout 0.5s 3s";
+        setTimeout(function() {
+            toast.remove();
+        }, 3500); 
+    }
+}
+
+    htmx.on("triggerToast", (e) => {
+        showToast();
+    })
+</script>
 </body>
 
 </html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="cat" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${title}">SOS - ETSEIB: Inicia Sessió</title>
+  <meta layout:fragment="head" />
+</head>
+
+<body>
+<div layout:fragment="content" style="display: flex; flex-direction: column; align-items: center; justify-items: center;">
+  <nav class="breadcrumb is-left" aria-label="breadcrumbs">
+    <ul>
+      <th:block th:each="item, iterStat : ${breadcrumbs}">
+        <li 
+          th:classappend="${iterStat.last} ? 'is-active' : ''"
+          th:attr="aria-current=${iterStat.last} ? 'page' : null">
+          <a th:href="@{'${item.routes}}" th:text="${item.crumbs}"></a>
+        </li>
+      </th:block>
+    </ul>
+  </nav>
+</div>
+</body>
+
+</html>

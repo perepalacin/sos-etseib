@@ -1,5 +1,12 @@
 package controllers;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+
+import org.postgresql.util.PSQLException;
+
 import com.google.gson.JsonParseException;
 import com.sun.net.httpserver.HttpServer;
 
@@ -8,15 +15,10 @@ import entities.dto.UserDto;
 import exceptions.InvalidCredentialsException;
 import exceptions.InvalidEmailException;
 import exceptions.InvalidPasswordException;
-import org.postgresql.util.PSQLException;
 import services.AuthService;
 import services.BodyParser;
 import views.AuthView;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
+import views.ToastView;
 
 public class AuthController {
 
@@ -100,7 +102,6 @@ public class AuthController {
                     responseCode = 401;
                 } catch (JsonParseException | IOException e) {
                     response = "Error parsing the request";
-                    System.out.println("Error parsing auth request " + e.getMessage());
                     responseCode = 400;
                 } catch (PSQLException e) {
                     response = e.getMessage();
@@ -110,8 +111,10 @@ public class AuthController {
                     System.out.println("Error with SQL query on registering user " + e.getMessage());
                 }
                 if (responseCode >= 400) {
-                    //TODO: return a toast
+                    response = ToastView.generateToast("Ups! Hi ha hagut algun problema", response, "is-danger");
+                    exchange.getResponseHeaders().set("HX-Trigger", "triggerToast");
                 }
+                exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
                 exchange.sendResponseHeaders(responseCode, response.getBytes().length);
                 OutputStream os = exchange.getResponseBody();
                 os.write(response.getBytes());
