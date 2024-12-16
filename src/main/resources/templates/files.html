@@ -9,19 +9,54 @@
 </head>
 
 <body>
-<div layout:fragment="content" style="display: flex; flex-direction: column; align-items: center; justify-items: center;">
-  <nav class="breadcrumb is-left" aria-label="breadcrumbs">
-    <ul>
-      <th:block th:each="item, iterStat : ${breadcrumbs}">
-        <li 
-          th:classappend="${iterStat.last} ? 'is-active' : ''"
-          th:attr="aria-current=${iterStat.last} ? 'page' : null">
-          <a th:href="@{'${item.routes}}" th:text="${item.crumbs}"></a>
-        </li>
-      </th:block>
-    </ul>
-  </nav>
-</div>
-</body>
+  <div layout:fragment="content" class="is-flex-direction-column is-full is-justify-content-center	is-align-content-center">
+    <nav class="fs-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <th:block th:each="item, iterStat : ${breadcrumbs}">
+          <li 
+          th:classappend="${iterStat.last} ? 'active breadcrumb-item' : 'breadcrumb-item'"
+          th:attr="aria-current=${iterStat.last} ? 'page'">
+          <button class="btn btn-light">
+            <a class="link-underline text-black link-underline-opacity-0" th:href="${item.route}" th:text="${item.crumb}"></a>
+          </button>
+          </li>
+        </th:block>
+      </ol>
+    </nav>
+
+    <h4 class="fw-semibold">Folders</h4>
+    <nav class="container text-center m-0 p-0">
+      <ul class="row row-cols-2 row-cols-sm-3 row-cols-md-5 list-unstyled ">
+        <th:block th:each="item, iterStat : ${files}"
+          th:if="${item.type} == 'folder'">
+            <li th:with="lastCrumb=${breadcrumbs[breadcrumbs.size() - 1]}">
+              <button type="button" class="btn btn-light w-100 py-2 border">
+                <a th:href="${lastCrumb.route  + '/' + item.name}" class="link-underline text-black link-underline-opacity-0 col d-flex flex-row align-items-center justify-content-center gap-2">
+                  <i class="fa-regular fa-folder"></i>
+                  <p class="p-0 m-0 fw-semibold" th:text="${item.name}"></p>
+                </a>
+              </button>
+            </li>
+          </th:block>
+      </ul>
+    </nav>
+    <h4 class="fw-semibold">Files</h4>
+    <nav class="container text-center m-0 p-0">
+      <ul class="row row-cols-2 row-cols-sm-3 row-cols-md-5 list-unstyled ">
+        <th:block th:each="item, iterStat : ${files}"
+          th:if="${item.type} == 'file'">
+            <li th:with="lastCrumb=${breadcrumbs[breadcrumbs.size() - 1]}">
+              <button type="button" class="btn btn-light w-100 border">
+                <a th:href="${lastCrumb.route  + '/' + item.name}" class="link-underline text-black link-underline-opacity-0 col d-flex flex-column align-items-center justify-content-center gap-2">
+                  <p class="p-0 m-0 fw-semibold" th:text="${item.name}"></p>
+                  <img src="https://res-academy.cache.wpscdn.com/images/d7805aca4a1d34495f37d14bc9f12ccb.png" class="w-100 rounded-3" style="height: 150px;"/>
+                </a>
+              </button>
+            </li>
+          </th:block>
+      </ul>
+    </nav>
+  </div>
+  </body>
 
 </html>

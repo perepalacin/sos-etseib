@@ -1,42 +1,38 @@
 package entities;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 public class BreadcrumbsDao {
-    public List<String> crumbs;
-    public List<String> routes;
+    private List<BreadcrumbItem> items;
 
-    public BreadcrumbsDao(List<String> routesArray) {
-        this.routes = new ArrayList<String>();
-        crumbs = new ArrayList<String>();
-        this.generateCrumps(routesArray);
+    public BreadcrumbsDao(List<String> routes) {
+        this.items = new ArrayList<>();
+        this.generateCrumbs(routes);
     }
 
-    private void generateCrumps (List<String> routes) {
+    private void generateCrumbs(List<String> routes) {
         StringBuilder path = new StringBuilder("/files");
-        routes.forEach(route -> {
+        for (String route : routes) {
             path.append("/").append(route);
-            String[] words = route.split(" ");
-            StringBuilder crump = new StringBuilder();
-            for (String word : words) {
-                if (!word.isEmpty()) {
-                    crump.append(Character.toUpperCase(word.charAt(0)))
-                            .append(word.substring(1))
-                            .append(" ");
-                }
-            }
-            String formattedRoute = crump.toString().trim();
-            System.out.println(formattedRoute);
-            System.out.println(path);
-            this.crumbs.add(formattedRoute);
-            this.routes.add(String.valueOf(path));
-        });
+            String formattedRoute = capitalizeWords(route);
+            this.items.add(new BreadcrumbItem(formattedRoute, path.toString()));
+        }
     }
 
+    private String capitalizeWords(String input) {
+        String[] words = input.split(" ");
+        StringBuilder capitalized = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                capitalized.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1)).append(" ");
+            }
+        }
+        return capitalized.toString().trim();
+    }
+
+    public List<BreadcrumbItem> getItems() {
+        return items;
+    }
 }

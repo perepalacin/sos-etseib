@@ -27,7 +27,7 @@ public class FilesView {
         BreadcrumbsDao breadcrumbs = new BreadcrumbsDao(route);
 
         Context context = new Context();
-        context.setVariable("breadcrumbs", breadcrumbs.get);
+        context.setVariable("breadcrumbs", breadcrumbs.getItems());
         context.setVariable("files", files);
         context.setVariable("title", "SOS - ETSEIB");
         context.setVariable("appName", "SOS - ETSEIB");
