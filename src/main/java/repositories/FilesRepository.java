@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import entities.FileDao;
@@ -21,6 +22,8 @@ public class FilesRepository {
                 "parent_id INTEGER REFERENCES files(id) ON DELETE CASCADE, " +
                 "name TEXT NOT NULL, " +
                 "type TEXT NOT NULL CHECK (type IN ('file', 'folder')), " +
+                "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                "shared_by TEXT, " + 
                 "s3_url TEXT);";
 
         String createParentIdIndexSql = "CREATE INDEX IF NOT EXISTS idx_files_parent_id ON files(parent_id);";
@@ -51,6 +54,8 @@ public class FilesRepository {
                 "        i.name, " +
                 "        i.type, " +
                 "        i.s3_url, " +
+                "        i.created_at, " +
+                "        i.shared_by, " +
                 "        1 AS level " +
                 "    FROM files i " +
                 "    CROSS JOIN path_components pc " +
@@ -64,6 +69,8 @@ public class FilesRepository {
                 "        i.name, " +
                 "        i.type, " +
                 "        i.s3_url, " +
+                "        i.created_at, " +
+                "        i.shared_by, " +
                 "        pti.level + 1 AS level " +
                 "    FROM files i " +
                 "    INNER JOIN path_to_item pti ON i.parent_id = pti.id " +
@@ -84,6 +91,8 @@ public class FilesRepository {
                 "        t.name, " +
                 "        t.type, " +
                 "        t.s3_url, " +
+                "        t.created_at, " +
+                "        t.shared_by, " +
                 "        t.level " +
                 "    FROM target_item t " +
                 "    WHERE t.type = 'file' " +
@@ -96,6 +105,8 @@ public class FilesRepository {
                 "        i.name, " +
                 "        i.type, " +
                 "        i.s3_url, " +
+                "        i.created_at, " +
+                "        i.shared_by, " +
                 "        t.level + 1 AS level " +
                 "    FROM files i " +
                 "    JOIN target_item t ON i.parent_id = t.id " +
@@ -119,8 +130,10 @@ public class FilesRepository {
             String name = rs.getString("name");
             String type = rs.getString("type");
             String s3Url = rs.getString("s3_url");
+            Date createdAt = rs.getDate("created_at");
+            String sharedBy = rs.getString("shared_by");
 
-            FileDao file = new FileDao(id, parentId, name, type, s3Url);
+            FileDao file = new FileDao(id, parentId, name, type, s3Url, createdAt, sharedBy);
             files.add(file);
         }
         return files;

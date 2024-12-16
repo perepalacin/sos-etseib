@@ -6,21 +6,19 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 
 import entities.FileDao;
 import exceptions.FileNotFoundException;
 import services.FilesService;
-import views.AuthView;
 import views.FilesView;
 
 public class FilesController {
 
     private final FilesService filesService = new FilesService();
-    private final Gson gson = new Gson();
 
     public FilesController (HttpServer server) {
+        server.createContext("/static/", new StaticFileHandler("./src/main/resources"));
         server.createContext("/files", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
                 String response = "";

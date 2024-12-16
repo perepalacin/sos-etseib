@@ -31,6 +31,7 @@ public class FilesView {
         context.setVariable("files", files);
         context.setVariable("title", "SOS - ETSEIB");
         context.setVariable("appName", "SOS - ETSEIB");
+        context.setVariable("isUserLogged", true);
 
         return templateEngine.process("files", context);
     }

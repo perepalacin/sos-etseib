@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,4 +15,6 @@ public class FileDao {
     String name;
     String type;
     String s3_url;
+    Date createdAt;
+    String sharedBy;
 }

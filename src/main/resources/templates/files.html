@@ -8,55 +8,72 @@
   <meta layout:fragment="head" />
 </head>
 
-<body>
-  <div layout:fragment="content" class="is-flex-direction-column is-full is-justify-content-center	is-align-content-center">
-    <nav class="fs-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-      <ol class="breadcrumb">
+  <div layout:fragment="content" class="w-100 flex flex-column gap-1">
+    <nav aria-label="breadcrumb" class="w-100">
+      <ol class="breadcrumb w-100">
         <th:block th:each="item, iterStat : ${breadcrumbs}">
           <li 
-          th:classappend="${iterStat.last} ? 'active breadcrumb-item' : 'breadcrumb-item'"
+          th:classappend="${iterStat.last} ? 'active' : ''"
           th:attr="aria-current=${iterStat.last} ? 'page'">
-          <button class="btn btn-light">
-            <a class="link-underline text-black link-underline-opacity-0" th:href="${item.route}" th:text="${item.crumb}"></a>
-          </button>
+            <a th:href="${item.route}" th:text="${item.crumb}"></a>
           </li>
+          <p style="margin: 0rem;" th:if="${!iterStat.last}">></p>
         </th:block>
       </ol>
     </nav>
-
-    <h4 class="fw-semibold">Folders</h4>
-    <nav class="container text-center m-0 p-0">
-      <ul class="row row-cols-2 row-cols-sm-3 row-cols-md-5 list-unstyled ">
+    <h4 class="semi-bold">Folders</h4>
+    <nav class="w-100">
+      <ul class="folders-list">
         <th:block th:each="item, iterStat : ${files}"
           th:if="${item.type} == 'folder'">
             <li th:with="lastCrumb=${breadcrumbs[breadcrumbs.size() - 1]}">
-              <button type="button" class="btn btn-light w-100 py-2 border">
-                <a th:href="${lastCrumb.route  + '/' + item.name}" class="link-underline text-black link-underline-opacity-0 col d-flex flex-row align-items-center justify-content-center gap-2">
-                  <i class="fa-regular fa-folder"></i>
-                  <p class="p-0 m-0 fw-semibold" th:text="${item.name}"></p>
+                <a th:href="${lastCrumb.route  + '/' + item.name}" class="flex flex-row align-center justify-center gap-1">
+                  <i class="fa-solid fa-folder" style="color: #55585d"></i>
+                  <p th:text="${item.name}"></p>
                 </a>
-              </button>
             </li>
           </th:block>
       </ul>
     </nav>
-    <h4 class="fw-semibold">Files</h4>
-    <nav class="container text-center m-0 p-0">
-      <ul class="row row-cols-2 row-cols-sm-3 row-cols-md-5 list-unstyled ">
+    <h4 class="semi-bold">Files</h4>
+    <nav class="w-100">
+      <table class="w-100" th:with="lastCrumb=${breadcrumbs[breadcrumbs.size() - 1]}">
+        <tr class="w-100">
+          <th style="width: auto; text-align: center; margin-right: 0.5rem;">
+            <i class="fa-solid fa-bars"></i>
+          </th>
+          <th class="text-start" style="width: 50%;">Name</th>
+          <th class="text-start"  style="width: auto;">Compartit per</th>
+          <th class="text-start"  style="width: auto;">Compartit el</th>
+          <th class="text-start"  style="width: auto;">Puntuació</th>
+        </tr>
         <th:block th:each="item, iterStat : ${files}"
-          th:if="${item.type} == 'file'">
-            <li th:with="lastCrumb=${breadcrumbs[breadcrumbs.size() - 1]}">
-              <button type="button" class="btn btn-light w-100 border">
-                <a th:href="${lastCrumb.route  + '/' + item.name}" class="link-underline text-black link-underline-opacity-0 col d-flex flex-column align-items-center justify-content-center gap-2">
-                  <p class="p-0 m-0 fw-semibold" th:text="${item.name}"></p>
-                  <img src="https://res-academy.cache.wpscdn.com/images/d7805aca4a1d34495f37d14bc9f12ccb.png" class="w-100 rounded-3" style="height: 150px;"/>
+        th:if="${item.type} == 'file'">
+        <tr class="w-100">
+            <!-- <a th:href="${lastCrumb.route  + '/' + item.name}"></a> -->
+            <a style="background-color: red;" href="/"></a>
+              <td style="text-align: center; margin-right: 0.5rem;">
+                <a href="/">
+                  <i th:if="${#strings.endsWith(item.name,'doc')}" class="fa-regular fa-file-word" style="color: #4472ee;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'docx')}" class="fa-regular fa-file-word" style="color: #4472ee;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'pdf')}" class="fa-regular fa-file-pdf" style="color: #d94932;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'xlsx')}" class="fa-regular fa-file-table" style="color: #469d4e;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'ppt')}" class="fa-regular fa-file-powerpoint" style="color: #f3ba28;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'pptx')}" class="fa-regular fa-file-powerpoint" style="color: #f3ba28;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'jpg')}" class="fa-regular fa-image" style="color: #55585d;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'jpg')}" class="fa-regular fa-image" style="color: #55585d;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'jpeg')}" class="fa-regular fa-image" style="color: #55585d;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'gif')}" class="fa-regular fa-image" style="color: #55585d;"></i>
+                  <i th:if="${#strings.endsWith(item.name,'txt')}" class="fa-regular fa-file-lines" style="color: #4472ee;"></i>
                 </a>
-              </button>
-            </li>
-          </th:block>
-      </ul>
+              </td>
+              <td th:text="${item.name}"></td>
+              <td class="font-light" th:text="${item.sharedBy}"></td>
+              <td class="font-light" th:text="${#dates.format(item.createdAt, 'dd. MMM yyyy')}"></td>
+              <td>4.7/5</td>
+          </tr>
+      </table>
     </nav>
   </div>
-  </body>
 
 </html>
