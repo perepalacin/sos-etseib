@@ -10,8 +10,8 @@ public class FilesService {
 
     private FilesRepository filesRepository = new FilesRepository();
 
-    public List<FileDao> getFilesFromRoute(String[] route) throws SQLException {
-        return filesRepository.getFilesFromRoute(route);
+    public List<FileDao> getFilesFromRoute(String[] route, String searchInput) throws SQLException {
+        return filesRepository.getFilesFromRoute(route, searchInput);
 
         //If the result is a file, get the contents from the s3 bucket and fetch the comments
         // else return the view

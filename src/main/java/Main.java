@@ -5,6 +5,12 @@ import controllers.FilesController;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
+
+import gg.jte.CodeResolver;
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
+import gg.jte.resolve.DirectoryCodeResolver;
 
 public class Main {
 
@@ -21,9 +27,11 @@ public class Main {
             output.flush();
             exchange.close();
         }));
+        CodeResolver codeResolver = new DirectoryCodeResolver(Path.of("src/main/jte")); // This is the directory where your .jte files are located.
+        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html); // Two choices: Plain or Html
         server.setExecutor(null);
         server.start();
-        new FilesController(server);
-        new AuthController(server);
+        new FilesController(server, templateEngine);
+        new AuthController(server, templateEngine);
     }
 }

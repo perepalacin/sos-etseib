@@ -78,6 +78,10 @@ tr:not(:first-child):hover {
 
 /* GENERAL UTILITIES */
 
+.h-100 {
+    height: 100%;
+}
+
 .semi-bold {
     font-weight: 600;
 }
@@ -110,12 +114,28 @@ tr:not(:first-child):hover {
     gap: 0.5rem;
 }
 
+.relative {
+    position: relative
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
 .gap-1 {
     gap: 1rem;
 }
 
+.gap-2 {
+    gap: 2rem;
+}
+
 .w-100 {
     width: 100%;
+}
+
+.w-40 {
+    width: 40%
 }
 
 .text-start {
@@ -181,10 +201,13 @@ tr:not(:first-child):hover {
     gap: 0.5;
     align-items: center;
     justify-content: start;
-    padding: 0.1rem 2rem;
     border-radius: 0.5rem;
     background-color: #F1F4F8;
     cursor: pointer;
+}
+
+.folders-list li a {
+    padding: 0.1rem 2rem;
 }
 
 .folders-list li:hover {
@@ -198,49 +221,9 @@ tr:not(:first-child):hover {
     font-weight: 400;
 }
 
-.files-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    width: 100%;
-}
-
-.files-list li {
-    padding: 0.1rem 1rem 1rem 1rem;
-    border-radius: 0.5rem;
-    background-color: #F1F4F8;
-    cursor: pointer;
-}
-
-.files-list li:hover {
-    background-color: #E0E3E7;
-}
-
-.files-list li a {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25;
-    align-items: center;
-    justify-content: start;
-}
-
-.files-list li a section{
-    background-color: white;
-    aspect-ratio: 1 / 1;
-    border-radius: 0.5rem;
-}
-
-.files-list > * {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 400;
-}
-
 .btn {
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
-    font-size: 1rem;
     border: none;
     font-weight: 400;
     display: flex;
@@ -293,13 +276,71 @@ tr > a {
     z-index: 1;
 }
 
+.tabs {
+    display: flex;
+    flex-direction: row;
+}
+
+.tabs li {
+    border-bottom: 1px solid #212121;
+    padding: 0.5rem 4rem;
+    font-size: 1.2rem;
+}
+
+.tabs li.active {
+    border-bottom: 1px solid #0d6efd;
+}
+
+.tabs li.active a {
+    color: #0d6efd;
+}
+
+.tabs li a {
+    color: #212121;
+}
+
+.tabs li:not(.active):hover {
+    border-bottom: 1px solid #000000;
+}
+
+.tabs li:not(.active):hover a {
+    color: #000000;
+}
+
+.floating-image {
+    transform: translateX(-2rem) translateY(-2rem);
+}
+
+.search-input {
+    background-color: #eaeef5;
+    padding: 0.75rem 2rem 0.75rem 2.75rem;
+    border-radius: 2rem;
+    font-size: 1.1rem;
+    border: none;
+    font-weight: 400;
+    width: 100%
+}
+
+.search-input:focus {
+    outline: 1px solid grey;
+    background-color: white;
+}
+
+.search-div {
+    position: relative;
+    width: 40%;
+}
+
+.search-div i {
+    height: 100%;
+    position: absolute;
+    transform: translateY(32%) translateX(100%);
+}
+
 /* BREAKPOINTS */
 
 @media (min-width: 600px) {
     .folders-list {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .files-list {
         grid-template-columns: repeat(3, 1fr);
     }
 }
@@ -308,16 +349,10 @@ tr > a {
     .folders-list {
         grid-template-columns: repeat(4, 1fr);
     }
-    .files-list {
-        grid-template-columns: repeat(4, 1fr);
-    }
 }
 
 @media (min-width: 2000px) {
     .folders-list {
-        grid-template-columns: repeat(9, 1fr);
-    }
-    .files-list {
         grid-template-columns: repeat(9, 1fr);
     }
 }

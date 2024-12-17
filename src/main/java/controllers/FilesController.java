@@ -1,15 +1,19 @@
 package controllers;
 
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.sun.net.httpserver.HttpServer;
 
 import entities.FileDao;
 import exceptions.FileNotFoundException;
+import gg.jte.TemplateEngine;
 import services.FilesService;
 import views.FilesView;
 
@@ -17,13 +21,14 @@ public class FilesController {
 
     private final FilesService filesService = new FilesService();
 
-    public FilesController (HttpServer server) {
+    public FilesController (HttpServer server, TemplateEngine templateEngine) {
         server.createContext("/static/", new StaticFileHandler("./src/main/resources"));
         server.createContext("/files", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
                 String response = "";
                 int responseCode = 500;
                 String path = exchange.getRequestURI().getPath();
+                String query = exchange.getRequestURI().getQuery();
                 String prefix = "/files";
                 if (path.startsWith(prefix)) {
                     path = path.substring(prefix.length());
@@ -32,18 +37,31 @@ public class FilesController {
                 route = Arrays.stream(route)
                         .filter(s -> !s.isEmpty())
                         .toArray(String[]::new);
+
+                String searchInput = "";
+                if (query != null) {
+                    Map<String, String> queryParams = Arrays.stream(query.split("&"))
+                        .map(param -> param.split("=", 2))
+                        .collect(Collectors.toMap(
+                            arr -> URLDecoder.decode(arr[0], StandardCharsets.UTF_8),
+                            arr -> arr.length > 1 ? URLDecoder.decode(arr[1], StandardCharsets.UTF_8) : ""
+                    ));
+                    searchInput = queryParams.get("search");
+                }
+                System.out.println(Arrays.toString(route) + searchInput);
                 try {
-                    List<FileDao> files = filesService.getFilesFromRoute(route);
-                    if (files.size() == 0) {
+                    List<FileDao> files = filesService.getFilesFromRoute(route, searchInput);
+                    if (files.isEmpty()) {
                         throw new FileNotFoundException();
                     }
-                    response = FilesView.generateDirectoryView(Arrays.stream(route).toList(), files);
+                    response = FilesView.generateDirectoryView(templateEngine, Arrays.stream(route).toList(), files);
+                    responseCode = 200;
                 } catch (SQLException e) {
                     response = "Internal server error please try again later";
                     System.out.println("Error with SQL query on registering user " + e.getMessage());
                 } catch (FileNotFoundException e) {
                     response = "Return cute not found page";
-                    responseCode = 404;
+                    responseCode = 404; //TODO: is it a 404 or a 200?
                 }
                 exchange.sendResponseHeaders(responseCode, response.getBytes(StandardCharsets.UTF_8).length);
                 OutputStream output = exchange.getResponseBody();

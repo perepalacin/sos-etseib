@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-<html lang="cat" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="layout">
+@param String appTitle
+@param boolean isUserLogged
 
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${title}">SOS - ETSEIB: Inicia Sessió</title>
-    <meta layout:fragment="head" />
-</head>
-
-<body>
-    <div layout:fragment="content" id="auth-card" style="display: flex; flex-direction: column; align-items: center; justify-items: center;">
-        <div class="tabs is-medium is-centered">
+@template.layout.main(isUserLogged = isUserLogged, appName = appTitle,content = @`
+    <div id="auth-card" class="flex flex-column align-center justify-center gap-2">
+        <div class="flex flex-row align-center justify-center">
             <ul>
                 <li class="is-active"><a href="/sign-in">Inicia sessió</a></li>
                 <li><a href="/sign-up">Registra't</a></li>
@@ -23,7 +16,7 @@
                 <div class="field">
                     <p class="control has-icons-left has-icons-right">
                         <input class="input" type="email" id="email" name="email"
-                            placeholder="nom.cognom1.cognom2@estudiantat.upc.edu" required>
+                               placeholder="nom.cognom1.cognom2@estudiantat.upc.edu" required>
                         <span class="icon is-small is-left">
                             <i class="fas fa-envelope"></i>
                         </span>
@@ -32,7 +25,7 @@
                 <div class="field">
                     <p class="control has-icons-left">
                         <input class="input" type="password" id="password" name="password"
-                            placeholder="La teva contrasenya" required>
+                               placeholder="La teva contrasenya" required>
                         <span class="icon is-small is-left">
                             <i class="fas fa-lock"></i>
                         </span>
@@ -50,6 +43,4 @@
     </div>
 
     </div>
-</body>
-
-</html>
+`)

@@ -15,6 +15,7 @@ import entities.dto.UserDto;
 import exceptions.InvalidCredentialsException;
 import exceptions.InvalidEmailException;
 import exceptions.InvalidPasswordException;
+import gg.jte.TemplateEngine;
 import services.AuthService;
 import services.BodyParser;
 import views.AuthView;
@@ -24,11 +25,20 @@ public class AuthController {
 
     private final AuthService authService = new AuthService();
 
-    public AuthController (HttpServer server) {
+    public AuthController (HttpServer server, TemplateEngine templateEngine) {
+
+        server.createContext("/", exchange -> {
+            if ("GET".equals(exchange.getRequestMethod())) {
+                //TODO: check auth
+                exchange.getResponseHeaders().set("Location", "/files/root");
+                exchange.sendResponseHeaders(302, -1);
+                exchange.close();
+            }
+        });
 
         server.createContext("/sign-in", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
-                String response = AuthView.generateLoginView();
+                String response = AuthView.generateLoginView(templateEngine);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
                 exchange.sendResponseHeaders(200, bytes.length);
@@ -40,7 +50,7 @@ public class AuthController {
 
         server.createContext("/sign-up", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
-                String response = AuthView.generateSignUpView();
+                String response = AuthView.generateSignUpView(templateEngine);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
                 exchange.sendResponseHeaders(200, bytes.length);

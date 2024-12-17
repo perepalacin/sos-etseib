@@ -42,7 +42,7 @@ public class FilesRepository {
         }
     }
 
-    public List<FileDao> getFilesFromRoute(String[] routes) throws SQLException {
+    public List<FileDao> getFilesFromRoute(String[] routes, String searchInput) throws SQLException {
         String sqlQuery = "WITH RECURSIVE " +
                 "path_components AS (" +
                 "    SELECT ?::text[] AS path_arr" +
@@ -113,13 +113,15 @@ public class FilesRepository {
                 "    WHERE t.type = 'folder' " +
                 ") " +
                 "SELECT * " +
-                "FROM result;";
+                "FROM result " +
+                "WHERE name ILIKE '%' || ? || '%';";
         
         Connection connection = DatabaseConnectionPool.getConnection();
         PreparedStatement ps = connection.prepareStatement(sqlQuery);
 
         java.sql.Array sqlArray = connection.createArrayOf("text", routes);
         ps.setArray(1, sqlArray);
+        ps.setString(2, searchInput);
 
         List<FileDao> files = new ArrayList<>();
         ResultSet rs = ps.executeQuery();
@@ -136,6 +138,10 @@ public class FilesRepository {
             FileDao file = new FileDao(id, parentId, name, type, s3Url, createdAt, sharedBy);
             files.add(file);
         }
+        rs.close();
+        ps.close();
+        connection.close();
+    
         return files;
     }
 }

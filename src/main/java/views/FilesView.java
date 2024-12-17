@@ -1,38 +1,35 @@
 package views;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import entities.BreadcrumbsDao;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
 import entities.FileDao;
-import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+import gg.jte.TemplateEngine;
+import gg.jte.TemplateOutput;
+import gg.jte.output.StringOutput;
 
 public class FilesView {
 
-    public static String generateDirectoryView(List<String> route, List<FileDao> files) {
-        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-        resolver.setTemplateMode(TemplateMode.HTML);
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setPrefix("/templates/");
-        resolver.setSuffix(".html");
+    public static String generateDirectoryView(TemplateEngine templateEngine, List<String> route, List<FileDao> files) {
+        try {
+            BreadcrumbsDao breadcrumbs = new BreadcrumbsDao(route);
+            TemplateOutput output = new StringOutput();
 
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(resolver);
-        templateEngine.addDialect(new LayoutDialect());
+            Map<String, Object> params = new HashMap<>();
+            params.put("title", "SOS - ETSEIB: Q2");
+            params.put("breadcrumbs", breadcrumbs.getItems());
+            params.put("tabName", "SOS - ETSEIB: Folder1");
+            params.put("isUserLogged", true);
+            params.put("files", files);
 
-        BreadcrumbsDao breadcrumbs = new BreadcrumbsDao(route);
-
-        Context context = new Context();
-        context.setVariable("breadcrumbs", breadcrumbs.getItems());
-        context.setVariable("files", files);
-        context.setVariable("title", "SOS - ETSEIB");
-        context.setVariable("appName", "SOS - ETSEIB");
-        context.setVariable("isUserLogged", true);
-
-        return templateEngine.process("files", context);
+            templateEngine.render("pages/files.jte", params, output);
+            return output.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO: return 500 page
+            return "Failed to compute";
+        }
     }
 }

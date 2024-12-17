@@ -1,49 +1,40 @@
 package views;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import entities.BreadcrumbsDao;
+import gg.jte.TemplateEngine;
+import gg.jte.TemplateOutput;
+import gg.jte.output.StringOutput;
 
-import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+import java.util.HashMap;
+import java.util.Map;
+
 public class AuthView {
 
 
-    public static String generateLoginView() {
-        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-        resolver.setTemplateMode(TemplateMode.HTML);
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setPrefix("/templates/");
-        resolver.setSuffix(".html");
+    public static String generateLoginView(TemplateEngine templateEngine) {
+        try {
+            TemplateOutput output = new StringOutput();
 
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(resolver);
-        templateEngine.addDialect(new LayoutDialect());
+            Map<String, Object> params = new HashMap<>();
+            params.put("appTitle", "SOS - ETSEIB: Inicia Sessió");
+            params.put("isUserLogged", false);
 
-        Context context = new Context();
-        context.setVariable("title", "SOS - ETSEIB: Inicia Sessió");
-        context.setVariable("appName", "SOS - ETSEIB");
-        context.setVariable("isUserLogged", false);
-
-        return templateEngine.process("login", context);
+            templateEngine.render("pages/login.jte", params, output);
+            return output.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
-    public static String generateSignUpView() {
-        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-        resolver.setTemplateMode(TemplateMode.HTML);
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setPrefix("/templates/");
-        resolver.setSuffix(".html");
+    public static String generateSignUpView(TemplateEngine templateEngine) {
+        TemplateOutput output = new StringOutput();
 
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(resolver);
-        templateEngine.addDialect(new LayoutDialect());
+        Map<String, Object> params = new HashMap<>();
+        params.put("appTitle", "SOS - ETSEIB: Registra't");
+        params.put("isUserLogged", true);
 
-        Context context = new Context();
-        context.setVariable("title", "SOS - ETSEIB: Registra't");
-        context.setVariable("appName", "SOS - ETSEIB");
-        context.setVariable("isUserLogged", false);
-
-        return templateEngine.process("signup", context);
+        templateEngine.render("pages/signup.jte", params, output);
+        return output.toString();
     }
 }
