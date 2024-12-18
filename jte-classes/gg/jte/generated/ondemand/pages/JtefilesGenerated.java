@@ -66,7 +66,7 @@ public final class JtefilesGenerated {
 				}
 				jteOutput.writeContent("\n        ");
 				if (hasFiles) {
-					jteOutput.writeContent("\n            <h4 class=\"semi-bold\">Files</h4>\n            <nav class=\"w-100\">\n                <table class=\"w-100\">\n                    <tr class=\"w-100\">\n                        <th style=\"width: auto; text-align: center; margin-right: 0.5rem;\">\n                            <i class=\"fa-solid fa-bars\"></i>\n                        </th>\n                        <th class=\"text-start\" style=\"width: 50%;\">Name</th>\n                        <th class=\"text-start\"  style=\"width: auto;\">Compartit per</th>\n                        <th class=\"text-start\"  style=\"width: auto;\">Compartit el</th>\n                        <th class=\"text-start\"  style=\"width: auto;\">Puntuació</th>\n                    </tr>\n                    ");
+					jteOutput.writeContent("\n            <h4 class=\"semi-bold\">Files</h4>\n            <nav class=\"w-100\">\n                <table class=\"w-100\">\n                    <tr class=\"w-100\">\n                        <th style=\"width: auto; text-align: center; padding: 0rem 0.5rem;\">\n                            <i class=\"fa-solid fa-bars\"></i>\n                        </th>\n                        <th class=\"text-start\" style=\"width: 50%;\">Name</th>\n                        <th class=\"text-start\"  style=\"width: auto;\">Compartit per</th>\n                        <th class=\"text-start\"  style=\"width: auto;\">Compartit el</th>\n                        <th class=\"text-start\"  style=\"width: auto;\">Puntuació</th>\n                    </tr>\n                    ");
 					for (entities.FileDao file : files) {
 						jteOutput.writeContent("\n                        ");
 						if ("file".equals(file.getType())) {
@@ -93,7 +93,7 @@ public final class JtefilesGenerated {
 							} else {
 								jteOutput.writeContent("\n                                        <i class=\"fa-regular fa-file-lines\" style=\"color: #4472ee;\"></i>\n                                    ");
 							}
-							jteOutput.writeContent("\n                                    </a>\n                                </td>\n                                <td>\n                                    <a class=\"flex w-100\"");
+							jteOutput.writeContent("\n                                    </a>\n                                </td>\n                                <td>\n                                    <a class=\"py-0-5 flex w-100\"");
 							var __jte_html_attribute_4 = lastCrumb + "/" + file.getName();
 							if (gg.jte.runtime.TemplateUtils.isAttributeRendered(__jte_html_attribute_4)) {
 								jteOutput.writeContent(" href=\"");

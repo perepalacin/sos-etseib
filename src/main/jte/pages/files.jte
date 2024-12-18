@@ -45,7 +45,7 @@
             <nav class="w-100">
                 <table class="w-100">
                     <tr class="w-100">
-                        <th style="width: auto; text-align: center; margin-right: 0.5rem;">
+                        <th style="width: auto; text-align: center; padding: 0rem 0.5rem;">
                             <i class="fa-solid fa-bars"></i>
                         </th>
                         <th class="text-start" style="width: 50%;">Name</th>
@@ -74,7 +74,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="flex w-100" href="${lastCrumb + "/" + file.getName()}">
+                                    <a class="py-0-5 flex w-100" href="${lastCrumb + "/" + file.getName()}">
                                         ${file.getName()}
                                     </a>
                                 </td>

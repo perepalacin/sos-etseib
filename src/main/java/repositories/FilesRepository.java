@@ -42,7 +42,7 @@ public class FilesRepository {
         }
     }
 
-    public List<FileDao> getFilesFromRoute(String[] routes, String searchInput) throws SQLException {
+    public List<FileDao> getFilesFromRoute(List<String> routes) throws SQLException {
         String sqlQuery = "WITH RECURSIVE " +
                 "path_components AS (" +
                 "    SELECT ?::text[] AS path_arr" +
@@ -113,13 +113,63 @@ public class FilesRepository {
                 "    WHERE t.type = 'folder' " +
                 ") " +
                 "SELECT * " +
-                "FROM result " +
-                "WHERE name ILIKE '%' || ? || '%';";
-        
+                "FROM result;";
+
         Connection connection = DatabaseConnectionPool.getConnection();
         PreparedStatement ps = connection.prepareStatement(sqlQuery);
 
-        java.sql.Array sqlArray = connection.createArrayOf("text", routes);
+        java.sql.Array sqlArray = connection.createArrayOf("text", routes.toArray());
+        ps.setArray(1, sqlArray);
+
+        List<FileDao> files = new ArrayList<>();
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            Integer parentId = rs.getObject("parent_id") != null ? rs.getInt("parent_id") : null;
+            String name = rs.getString("name");
+            String type = rs.getString("type");
+            String s3Url = rs.getString("s3_url");
+            Date createdAt = rs.getDate("created_at");
+            String sharedBy = rs.getString("shared_by");
+
+            FileDao file = new FileDao(id, parentId, name, type, s3Url, createdAt, sharedBy);
+            files.add(file);
+        }
+        rs.close();
+        ps.close();
+        connection.close();
+
+        return files;
+    }
+
+    public List<FileDao> getFilesNestedInsideRoute(List<String> routes, String searchInput) throws SQLException {
+        String sqlQuery =
+                "WITH RECURSIVE path_components AS ( " +
+                        "    SELECT ?::text[] AS path_arr" +
+                        "), " +
+                        "path_to_folder AS (" +
+                        "    SELECT f.*, 1 AS level" +
+                        "    FROM files f, path_components pc" +
+                        "    WHERE f.parent_id IS NULL AND f.name = pc.path_arr[1]" +
+                        "  UNION ALL" +
+                        "    SELECT f2.*, p.level + 1 AS level" +
+                        "    FROM files f2" +
+                        "    INNER JOIN path_to_folder p ON f2.parent_id = p.id, path_components pc" +
+                        "    WHERE f2.name = pc.path_arr[p.level + 1]" +
+                        "      AND p.level + 1 <= array_length(pc.path_arr, 1)" +
+                        ")," +
+                        "recursive_files AS (" +
+                        "    SELECT * FROM files WHERE id = (SELECT id FROM path_to_folder ORDER BY level DESC LIMIT 1)" +
+                        "  UNION ALL" +
+                        "    SELECT f.* FROM files f INNER JOIN recursive_files rf ON f.parent_id = rf.id" +
+                        ")" +
+                        "SELECT * FROM recursive_files WHERE name ILIKE '%' || ? || '%' and type = 'file';";
+
+        Connection connection = DatabaseConnectionPool.getConnection();
+        PreparedStatement ps = connection.prepareStatement(sqlQuery);
+
+        java.sql.Array sqlArray = connection.createArrayOf("text", routes.toArray());
         ps.setArray(1, sqlArray);
         ps.setString(2, searchInput);
 
@@ -141,7 +191,8 @@ public class FilesRepository {
         rs.close();
         ps.close();
         connection.close();
-    
+
         return files;
     }
+
 }

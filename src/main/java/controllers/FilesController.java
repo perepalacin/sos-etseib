@@ -33,12 +33,11 @@ public class FilesController {
                 if (path.startsWith(prefix)) {
                     path = path.substring(prefix.length());
                 }
-                String[] route = path.split("/");
-                route = Arrays.stream(route)
-                        .filter(s -> !s.isEmpty())
-                        .toArray(String[]::new);
+                List<String> route = Arrays.stream(path.split("/")).toList();
+                route = route.stream()
+                        .filter(s -> !s.isEmpty()).toList();
 
-                String searchInput = "";
+                String searchInput = null;
                 if (query != null) {
                     Map<String, String> queryParams = Arrays.stream(query.split("&"))
                         .map(param -> param.split("=", 2))
@@ -48,13 +47,9 @@ public class FilesController {
                     ));
                     searchInput = queryParams.get("search");
                 }
-                System.out.println(Arrays.toString(route) + searchInput);
                 try {
                     List<FileDao> files = filesService.getFilesFromRoute(route, searchInput);
-                    if (files.isEmpty()) {
-                        throw new FileNotFoundException();
-                    }
-                    response = FilesView.generateDirectoryView(templateEngine, Arrays.stream(route).toList(), files);
+                    response = FilesView.generateDirectoryView(templateEngine, route, files);
                     responseCode = 200;
                 } catch (SQLException e) {
                     response = "Internal server error please try again later";
