@@ -36,6 +36,7 @@ p {
 
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
+    padding: 0;
 }
 
 a:visited { text-decoration: none; color:black; }
@@ -291,13 +292,13 @@ tr > a {
 }
 
 .tabs li {
-    border-bottom: 1px solid #212121;
+    border-bottom: 2px solid #212121;
     padding: 0.5rem 4rem;
     font-size: 1.2rem;
 }
 
 .tabs li.active {
-    border-bottom: 1px solid #0d6efd;
+    border-bottom: 2px solid #0d6efd;
 }
 
 .tabs li.active a {
@@ -309,7 +310,7 @@ tr > a {
 }
 
 .tabs li:not(.active):hover {
-    border-bottom: 1px solid #000000;
+    border-bottom: 2px solid #000000;
 }
 
 .tabs li:not(.active):hover a {
@@ -317,7 +318,28 @@ tr > a {
 }
 
 .floating-image {
-    transform: translateX(-2rem) translateY(-2rem);
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    right: 0;
+    height: 100%;
+    object-fit: contain;
+}
+
+#auth-card {
+    background-color: white;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border-radius: 2rem;
+    padding: 1rem 2rem;
+}
+
+#auth-card h4 {
+    font-weight: 400;
 }
 
 .search-input {

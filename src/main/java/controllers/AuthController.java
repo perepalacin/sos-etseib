@@ -18,12 +18,14 @@ import exceptions.InvalidPasswordException;
 import gg.jte.TemplateEngine;
 import services.AuthService;
 import services.BodyParser;
+import services.EmailService;
 import views.AuthView;
 import views.ToastView;
 
 public class AuthController {
 
     private final AuthService authService = new AuthService();
+    private final EmailService emailService = new EmailService();
 
     public AuthController (HttpServer server, TemplateEngine templateEngine) {
 
@@ -143,5 +145,13 @@ public class AuthController {
             }
             exchange.close();
         }));
+
+        server.createContext("/email", exchange -> {
+            if ("GET".equals(exchange.getRequestMethod())) {
+                emailService.sendEmail("perepalacin@gmail.com", 9212);
+                exchange.sendResponseHeaders(204, -1);
+                exchange.close();
+            }
+        });
     }
 }

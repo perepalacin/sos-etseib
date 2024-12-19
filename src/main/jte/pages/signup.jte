@@ -2,16 +2,17 @@
 @param boolean isUserLogged
 
 @template.layout.main(isUserLogged = isUserLogged, appName = appTitle,content = @`
-    <div id="auth-card" class="flex flex-column align-center justify-center gap-2">
-        <div class="flex flex-row align-center justify-center">
-            <ul>
-                <li class="is-active"><a href="/sign-in">Inicia sessió</a></li>
-                <li><a href="/sign-up">Registra't</a></li>
-            </ul>
+    <div class="overflow-hidden relative flex flex-column align-center justify-center w-100 h-100">
+        <div class="floating-image">
+            <img class="w-100 h-100" src="https://i.ytimg.com/vi/qfmMgtdz6TA/maxresdefault.jpg" alt="Foto del etseib" />
         </div>
-        <div class="is-full-mobile is-half-tablet">
-            <h1 class="title">Inicia sessió</h1>
-            <h2 class="subtitle">Accedeix a centenars de recursos acadèmics totalment gratuits</h2>
+        <div id="auth-card">
+            <ul class="tabs">
+                <li><a href="/sign-in">Inicia sessió</a></li>
+                <li class="active"><a href="/sign-up">Registra't</a></li>
+            </ul>
+            <h1 class="title">Registra't</h1>
+            <h4 class="subtitle">Per accedir a centenars<br/>de recursos acadèmics totalment gratuits</h4>
             <form hx-post="/api/v1/auth/sign-in" hx-trigger="submit" hx-target="#auth-card" method="post">
                 <div class="field">
                     <p class="control has-icons-left has-icons-right">
@@ -25,7 +26,7 @@
                 <div class="field">
                     <p class="control has-icons-left">
                         <input class="input" type="password" id="password" name="password"
-                               placeholder="La teva contrasenya" required>
+                               placeholder="La teva contrasenya" required />
                         <span class="icon is-small is-left">
                             <i class="fas fa-lock"></i>
                         </span>
@@ -40,7 +41,5 @@
                 </div>
             </form>
         </div>
-    </div>
-
     </div>
 `)

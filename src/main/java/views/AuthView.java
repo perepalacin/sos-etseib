@@ -28,6 +28,8 @@ public class AuthView {
     }
 
     public static String generateSignUpView(TemplateEngine templateEngine) {
+        try  {
+
         TemplateOutput output = new StringOutput();
 
         Map<String, Object> params = new HashMap<>();
@@ -36,5 +38,9 @@ public class AuthView {
 
         templateEngine.render("pages/signup.jte", params, output);
         return output.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
