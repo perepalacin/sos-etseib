@@ -2,6 +2,6 @@ package exceptions;
 
 public class InvalidPasswordException extends RuntimeException {
     public InvalidPasswordException() {
-        super("Invalid Password, it should have at least 8 characters, one capital letter, numbers and a special character.");
+        super("La contrassenya utilizada és massa fàcil. Ha de tenir almenys 8 caràcters, majuscules, digits i caracters especials.");
     }
 }

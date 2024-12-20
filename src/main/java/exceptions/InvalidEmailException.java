@@ -2,6 +2,6 @@ package exceptions;
 
 public class InvalidEmailException extends RuntimeException {
     public InvalidEmailException() {
-        super("Invalid email provided, please use your student email.");
+        super("Adreça electrònica utilizada invalida. Si us plau, utilizta la teva adreça UPC.");
     }
 }

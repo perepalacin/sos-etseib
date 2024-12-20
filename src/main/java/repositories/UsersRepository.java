@@ -17,11 +17,10 @@ public class UsersRepository {
     public UsersRepository() {
         createUsersTable();
         createSessionsTable();
-        createUserValidationTable();
     }
 
     public void createUsersTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS users (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), email VARCHAR(255) UNIQUE, password VARCHAR(255), activated BOOLEAN NOT NULL DEFAULT FALSE);";
+        String sql = "CREATE TABLE IF NOT EXISTS users (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), email VARCHAR(255) UNIQUE, password VARCHAR(255), activated BOOLEAN NOT NULL DEFAULT FALSE, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);";
         try (Connection connection = DatabaseConnectionPool.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.execute();
                 System.out.println("Table 'users' created or already exists.");
@@ -42,17 +41,6 @@ public class UsersRepository {
         }
     }
 
-    public void createUserValidationTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS user_validation (id SERIAL PRIMARY KEY, validation_pin CHAR(6), user_id UUID UNIQUE, FOREIGN KEY (user_id) REFERENCES users(id));";
-        try (Connection connection = DatabaseConnectionPool.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.execute();
-            System.out.println("Table 'user_validation' created or already exists.");
-        } catch (SQLException e) {
-            System.out.println("Failed to initialize the user_validation table");
-            e.printStackTrace();
-        }
-    }
-
     public UserDao findUserByEmail(String email) throws PSQLException, SQLException {
         String sql = "SELECT * FROM users WHERE email = ?;";
 
@@ -67,15 +55,16 @@ public class UsersRepository {
             return new UserDao(
                     UUID.fromString(rs.getString("id")),
                     rs.getString("email"),
-                    rs.getString("password")
+                    rs.getString("password"),
+                    rs.getBoolean("activated")
             );
         } else {
-            throw new InvalidCredentialsException();
+            return null;
         }
     }
 
     public UserDao createUser(String email, String password) throws PSQLException, SQLException {
-        String sql = "INSERT INTO users (email, password) VALUES (?, ?);";
+        String sql = "INSERT INTO users (email, password) VALUES (?, ?) RETURNING id, email, password;";
 
         Connection connection = DatabaseConnectionPool.getConnection();
         PreparedStatement ps = connection.prepareStatement(sql);
@@ -84,28 +73,30 @@ public class UsersRepository {
         ps.setString(2, password);
 
         ResultSet rs = ps.executeQuery();
-
         if (rs.next()) {
             return new UserDao(
                     UUID.fromString(rs.getString("id")),
                     rs.getString("email"),
-                    rs.getString("password")
+                    rs.getString("password"),
+                    false
             );
         }
+
         return null;
     }
 
-    public void registerValidationCode(String pin, UUID userId) throws PSQLException, SQLException {
-        String sql = "INSERT INTO user_validation (validation_pin, user_id) VALUES (?, ?);";
+    public void activateUser(UUID id) throws SQLException {
+        String sql = "UPDATE users SET activated = ? WHERE id = ?;";
 
         Connection connection = DatabaseConnectionPool.getConnection();
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.setString(1, pin);
-        ps.setString(2, String.valueOf(userId));
-
-        ResultSet rs = ps.executeQuery();
+        System.out.println(id);
+        ps.setBoolean(1, true);
+        ps.setObject(2, id);
+        ps.executeUpdate();
     }
+
 
 
 }

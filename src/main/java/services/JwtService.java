@@ -34,7 +34,7 @@ public class JwtService {
                 .add(claims)
                 .subject(userId.toString())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 15))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15))
                 .and()
                 .signWith(getKey())
                 .compact();
@@ -46,7 +46,6 @@ public class JwtService {
     }
 
     public String extractUserId(String token) {
-        // extract the username from jwt token
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -55,7 +54,6 @@ public class JwtService {
         return claimResolver.apply(claims);
     }
 
-    //    powder/luv
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getKey())

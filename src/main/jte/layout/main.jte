@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/htmx.org@2.0.3"
             integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
             crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
@@ -23,7 +24,7 @@
                 SOS - ETSEIB
             </a>
             @if(isUserLogged)
-                <form class="search-div">
+                <form class="search-div w-40" >
                     <i class="absolute fa-solid fa-magnifying-glass" style="color: #454746;" ></i>
                     <input 
                         class="search-input"

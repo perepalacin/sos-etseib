@@ -43,35 +43,23 @@ public class EmailService {
         });
     }
 
-    public void sendEmail(String toEmail, int pin) {
-        try {
-            System.out.println("Building email!");
-            Message message = new MimeMessage(this.session);
-            message.setFrom(new InternetAddress(email));
-            System.out.println("Sending from: " + email);
+    public void sendVerificationEmail(String toEmail, String username, String validationUrl) throws AddressException, MessagingException {
+        System.out.println("Building email!");
+        Message message = new MimeMessage(this.session);
+        message.setFrom(new InternetAddress(email));
+        message.setHeader("Auto-Submitted", "auto-generated");
+        System.out.println("Sending from: " + email);
+        message.setRecipients(
+                Message.RecipientType.TO,
+                InternetAddress.parse(toEmail)
+        );
+        System.out.println("Sending to: " + toEmail);
 
-            message.setRecipients(
-                    Message.RecipientType.TO,
-                    InternetAddress.parse(toEmail)
-            );
-            System.out.println("Sending to: " + toEmail);
-
-            message.setSubject("Testing Gmail SSL");
-            String htmlContent = "<h1>This is a Heading</h1><p>This is a paragraph in HTML. " + pin + "</p>";
-            message.setContent(htmlContent, "text/html");
-            Transport.send(message);
-
-            System.out.println("Done");
-
-        } catch (AddressException e) {
-            System.out.println("Address exception");
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (MessagingException e) {
-            System.out.println("Messaging exception");
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        message.setSubject("Valida la teva direcció de correu a SOS - ETSEIB");
+        String htmlContent = "<div><h1>" + username + ", benvingut a SOS - ETSEIB</h1><p>Ja casi hem acabat amb el procés de registre. Accedeix a l'enllaç a continuació per validar la teva direcció de correu: <a href=" + validationUrl + ">Valida el teu correu</a></p></div>";
+        message.setContent(htmlContent, "text/html");
+        Transport.send(message);
+        System.out.println("Mail sent!");
     }
 
 }

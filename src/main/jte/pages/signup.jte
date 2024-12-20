@@ -1,44 +1,28 @@
 @param String appTitle
-@param boolean isUserLogged
 
-@template.layout.main(isUserLogged = isUserLogged, appName = appTitle,content = @`
-    <div class="overflow-hidden relative flex flex-column align-center justify-center w-100 h-100">
-        <div class="floating-image">
-            <img class="w-100 h-100" src="https://i.ytimg.com/vi/qfmMgtdz6TA/maxresdefault.jpg" alt="Foto del etseib" />
-        </div>
+@template.layout.main(isUserLogged = false, appName = appTitle,content = @`
+    <div class="overflow-hidden relative flex flex-column align-center justify-center w-100 h-100" hx-ext="response-targets">
         <div id="auth-card">
             <ul class="tabs">
-                <li><a href="/sign-in">Inicia sessió</a></li>
-                <li class="active"><a href="/sign-up">Registra't</a></li>
+                <li><a href="/sign-in" class="btn">Inicia sessió</a></li>
+                <li class="active"><a class="btn btn-primary" href="/sign-up">Registra't</a></li>
             </ul>
-            <h1 class="title">Registra't</h1>
-            <h4 class="subtitle">Per accedir a centenars<br/>de recursos acadèmics totalment gratuits</h4>
-            <form hx-post="/api/v1/auth/sign-in" hx-trigger="submit" hx-target="#auth-card" method="post">
-                <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                        <input class="input" type="email" id="email" name="email"
-                               placeholder="nom.cognom1.cognom2@estudiantat.upc.edu" required>
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-envelope"></i>
-                        </span>
-                    </p>
+            <h1>Benvingut a SOS - ETSEIB</h1>
+            <h3 id="sub-title" class="text-center font-normal">Registra't i accedeix a centernars de recursos acadèmics totalment gratuits</h3>
+            <form class="flex flex-column gap-2 w-100 items-center" hx-post="/api/v1/auth/sign-up" hx-trigger="submit" hx-target="#auth-card" hx-swap="outerHTML" hx-target-error="#sub-title" method="post">
+                <div class="search-div">
+                    <i class="absolute fa-solid fa-envelope" style="color: #454746;" ></i>
+                    <input class="search-input" type="email" id="email" name="email"
+                           placeholder="nom.cognom1.cognom2@estudiantat.upc.edu" required autocomplete="username" />
                 </div>
-                <div class="field">
-                    <p class="control has-icons-left">
-                        <input class="input" type="password" id="password" name="password"
-                               placeholder="La teva contrasenya" required />
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-lock"></i>
-                        </span>
-                    </p>
+                <div class="search-div">
+                    <i class="absolute fa-solid fa-lock" style="color: #454746;" ></i>
+                    <input class="search-input" type="password" id="password" name="password"
+                           placeholder="La teva contrassenya" required autocomplete="new-password" />
                 </div>
-                <div class="field">
-                    <p class="control">
-                        <button type="submit" class="button is-success">
-                            Inicia Sessió
-                        </button>
-                    </p>
-                </div>
+                <button type="submit" class="btn btn-primary" >
+                    Registra't
+                </button>
             </form>
         </div>
     </div>
