@@ -9,7 +9,7 @@
 
 
 @template.layout.main(isUserLogged = true, appName = tabName,content = @`
-    <div class="w-100 flex flex-column gap-1">
+    <div class="w-100 flex flex-column gap-1 align-start">
         <nav aria-label="breadcrumb" class="w-100">
             <ol class="breadcrumb w-100">
                 @for(entities.BreadcrumbItem breadcrumb : breadcrumbs)

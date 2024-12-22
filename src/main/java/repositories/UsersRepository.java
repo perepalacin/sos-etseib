@@ -6,10 +6,7 @@ import exceptions.UserNotFoundException;
 import lombok.Generated;
 import org.postgresql.util.PSQLException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.UUID;
 
 public class UsersRepository {
@@ -31,8 +28,12 @@ public class UsersRepository {
     }
 
     public void createSessionsTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS sessions (session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(), email VARCHAR(255), expiration_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);";
-        try (Connection connection = DatabaseConnectionPool.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+        String sql = "CREATE TABLE IF NOT EXISTS sessions (" +
+                "session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(), " +
+                "user_id UUID REFERENCES users(id) ON DELETE CASCADE, " +
+                "expiration_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);";
+        try (Connection connection = DatabaseConnectionPool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.execute();
             System.out.println("Table 'sessions' created or already exists.");
         } catch (SQLException e) {
@@ -97,6 +98,46 @@ public class UsersRepository {
         ps.executeUpdate();
     }
 
+    public UUID createSession(UUID userId) throws SQLException {
+        String sql = "INSERT INTO sessions (user_id, expiration_date) VALUES (?, ?) RETURNING session_id;";
+        try (Connection connection = DatabaseConnectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setObject(1, userId);
+            ps.setTimestamp(2, new Timestamp(System.currentTimeMillis() + 14 * 24 * 60 * 60 * 1000));
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return (UUID) rs.getObject("session_id");
+            } else {
+                throw new SQLException("Hi ha hagut un error a l'hora de crear la teva sessió.");
+            }
+        }
+    }
+
+    public boolean isSessionValid(UUID sessionId) throws SQLException {
+        String sql = "SELECT 1 FROM sessions WHERE session_id = ? AND expiration_date > CURRENT_TIMESTAMP;";
+        try (Connection connection = DatabaseConnectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setObject(1, sessionId);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+        }
+    }
+
+    public boolean deleteSession(UUID sessionId) throws SQLException {
+        String sql = "DELETE FROM sessions WHERE session_id = ?;";
+        try (Connection connection = DatabaseConnectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setObject(1, sessionId);
+            int rowsAffected = ps.executeUpdate();
+
+            return rowsAffected > 0;
+        }
+    }
 
 
 }

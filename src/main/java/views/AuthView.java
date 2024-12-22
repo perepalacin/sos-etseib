@@ -42,11 +42,25 @@ public class AuthView {
         return "";
     }
 
-    public static String generateCorrectSignUpResponse (TemplateEngine templateEngine) {
+    public static String generateCorrectSignUpResponse (TemplateEngine templateEngine, String userEmail) {
         try  {
             TemplateOutput output = new StringOutput();
+            Map<String, Object> params = new HashMap<>();
+            params.put("userEmail", userEmail);
+            templateEngine.render("responses/valid-sign-up.jte", params, output);
+            return output.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
-            templateEngine.render("responses/valid-sign-up.jte", null, output);
+    public static String generateUserPendingActivation (TemplateEngine templateEngine, String userEmail) {
+        try  {
+            TemplateOutput output = new StringOutput();
+            Map<String, Object> params = new HashMap<>();
+            params.put("userEmail", userEmail);
+            templateEngine.render("responses/valid-sign-up.jte", params, output);
             return output.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,6 +76,37 @@ public class AuthView {
             params.put("errorMessage", errorMessage);
 
             templateEngine.render("responses/invalid-auth.jte", params, output);
+            return output.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String generateUserValidationErrorPage (TemplateEngine templateEngine, String errorMessage, boolean allowResendLink, String userEmail) {
+        try  {
+            TemplateOutput output = new StringOutput();
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("errorMessage", errorMessage);
+            params.put("allowResendLink", allowResendLink);
+            params.put("userEmail", userEmail);
+            templateEngine.render("pages/user-validation-link.jte", params, output);
+            return output.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String generateValidResendActivationEmail (TemplateEngine templateEngine, String userEmail) {
+        try  {
+            TemplateOutput output = new StringOutput();
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("userEmail", userEmail);
+
+            templateEngine.render("responses/valid-resend-activation.jte", params, output);
             return output.toString();
         } catch (Exception e) {
             e.printStackTrace();

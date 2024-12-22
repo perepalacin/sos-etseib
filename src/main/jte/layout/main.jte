@@ -33,7 +33,7 @@
                         placeholder="Cerca un arxiu o carpeta"
                     />
                 </form>
-                <button class="btn btn-primary">
+                <button hx-post="/api/v1/auth/log-out" class="btn btn-primary">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <p>Tanca Sessió</p>
                 </button>
