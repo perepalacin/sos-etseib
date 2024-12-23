@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
 import exceptions.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
@@ -36,15 +37,19 @@ public class AuthController {
 
         server.createContext("/", exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
-                //TODO: check auth
+                HttpUtils.protectedRoutesMiddleware(exchange);
                 exchange.getResponseHeaders().set("Location", "/files/root");
                 exchange.sendResponseHeaders(302, -1);
+                exchange.close();
+            } else {
+                exchange.sendResponseHeaders(405, -1); // Method Not Allowed
                 exchange.close();
             }
         });
 
         server.createContext("/sign-in", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
+                HttpUtils.avoidDuplicateLoginMiddleware(exchange);
                 String response = AuthView.generateLoginView(templateEngine);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
@@ -57,6 +62,7 @@ public class AuthController {
 
         server.createContext("/sign-up", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
+                HttpUtils.avoidDuplicateLoginMiddleware(exchange);
                 String response = AuthView.generateSignUpView(templateEngine);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
@@ -167,7 +173,6 @@ public class AuthController {
 
         server.createContext("/api/v1/auth/log-out", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
-                String response;
                 Map<String, String> cookiesMap = HttpUtils.parseCookies(exchange.getRequestHeaders());
                 String sessionId = cookiesMap.get("session_id");
 
@@ -176,23 +181,27 @@ public class AuthController {
                     try {
                         isLoggedOut = authService.logOutUser(UUID.fromString(sessionId));
                     } catch (SQLException e) {
-                        response = "El servei per tancar les sessions no està disponible actualment. Prova-ho més tard.";
+                        String response = "El servei per tancar les sessions no està disponible actualment. Prova-ho més tard.";
                         exchange.sendResponseHeaders(500, response.getBytes().length);
+                        try (OutputStream os = exchange.getResponseBody()) {
+                            os.write(response.getBytes());
+                        }
+                        exchange.close();
+                        return;
                     }
                 }
 
                 if (isLoggedOut) {
                     exchange.getResponseHeaders().add("Set-Cookie", "session_id=; HttpOnly; Max-Age=0; Path=/");
                     exchange.getResponseHeaders().set("Location", "/sign-in");
-                    response = "La teva sessió ha sigut tancada correctament.";
                     exchange.sendResponseHeaders(302, -1);
                 } else {
-                    response = "Necessites haver iniciar sessió primer per poder tancar la sessió.";
+                    String response = "Necessites haver iniciar sessió primer per poder tancar la sessió.";
                     exchange.sendResponseHeaders(401, response.getBytes().length);
+                    try (OutputStream os = exchange.getResponseBody()) {
+                        os.write(response.getBytes());
+                    }
                 }
-                OutputStream os = exchange.getResponseBody();
-                os.write(response.getBytes());
-                os.close();
             } else {
                 exchange.sendResponseHeaders(405, -1); // 405 Method Not Allowed
             }

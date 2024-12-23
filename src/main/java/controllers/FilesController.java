@@ -25,6 +25,7 @@ public class FilesController {
         server.createContext("/static/", new StaticFileHandler("./src/main/resources"));
         server.createContext("/files", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
+                HttpUtils.protectedRoutesMiddleware(exchange);
                 String response = "";
                 int responseCode = 500;
                 String path = exchange.getRequestURI().getPath();

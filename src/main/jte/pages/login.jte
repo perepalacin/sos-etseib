@@ -9,7 +9,7 @@
             </ul>
             <h1>Benvingut a SOS - ETSEIB</h1>
             <h3 id="sub-title" class="text-center font-normal">Inicia sessió per accedir a centernars de recursos acadèmics totalment gratuits</h3>
-            <form class="flex flex-column gap-2 w-100 items-center" hx-post="/api/v1/auth/sign-in" hx-trigger="submit" hx-target="#auth-card" hx-swap="outerHTML" hx-target-error="#sub-title" method="post">
+            <form class="flex flex-column gap-2 w-100 items-center" hx-post="/api/v1/auth/sign-in" hx-trigger="submit" hx-target="body" hx-replace-url="true" hx-swap="outerHTML" hx-target-error="#sub-title" method="post">
                 <div class="search-div">
                     <i class="absolute fa-solid fa-envelope" style="color: #454746;" ></i>
                     <input class="search-input" type="email" id="email" name="email"
