@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.sun.net.httpserver.HttpServer;
@@ -50,8 +51,18 @@ public class FilesController {
                 }
                 try {
                     List<FileDao> files = filesService.getFilesFromRoute(route, searchInput);
-                    response = FilesView.generateDirectoryView(templateEngine, route, files);
+                    if (files.isEmpty()) {
+                        //TODO: If last crumb is folder -> empty folder, else -> not found
+                        throw new FileNotFoundException();
+                    } else if (files.size() == 1 && Objects.equals(files.getFirst().getName(), route.getLast())){
+                        System.out.println("FILE!");
+                        String fileContents = filesService.showFileContent(files.getFirst().getName());
+                        response = FilesView.generateFileView(templateEngine, fileContents, files.getFirst().getName());
+                    } else {
+                        response = FilesView.generateDirectoryView(templateEngine, route, files);
+                    }
                     responseCode = 200;
+
                 } catch (SQLException e) {
                     response = "Internal server error please try again later";
                     System.out.println("Error with SQL query on registering user " + e.getMessage());

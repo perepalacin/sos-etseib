@@ -11,6 +11,7 @@ import gg.jte.CodeResolver;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.DirectoryCodeResolver;
+import repositories.CloudflareR2Client;
 
 public class Main {
 
@@ -28,7 +29,8 @@ public class Main {
             exchange.close();
         }));
         CodeResolver codeResolver = new DirectoryCodeResolver(Path.of("src/main/jte")); // This is the directory where your .jte files are located.
-        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html); // Two choices: Plain or Html
+        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
+
         server.setExecutor(null);
         server.start();
         new FilesController(server, templateEngine);

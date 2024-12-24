@@ -32,4 +32,21 @@ public class FilesView {
             return "Failed to compute";
         }
     }
+
+    public static String generateFileView(TemplateEngine templateEngine, String fileContent, String fileName) {
+        try {
+            TemplateOutput output = new StringOutput();
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("fileName", fileName);
+            params.put("content", fileContent);
+
+            templateEngine.render("pages/file-content.jte", params, output);
+            return output.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO: return 500 page
+            return "Failed to compute";
+        }
+    }
 }
