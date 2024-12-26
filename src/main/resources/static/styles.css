@@ -77,6 +77,10 @@ tr:not(:first-child):hover {
     position: relative;
 }
 
+code {
+  font-family: monospace;
+}
+
 /* GENERAL UTILITIES */
 
 .h-100 {

@@ -4,6 +4,12 @@ import entities.FileDao;
 import exceptions.FileNotFoundException;
 import repositories.CloudflareR2Client;
 import repositories.FilesRepository;
+import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.sync.ResponseTransformer;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -35,23 +41,22 @@ public class FilesService {
         // else return the view
     }
 
-    public String showFileContent(String fileKey) {
+    public String getFileContent(String fileName) {
         try {
-            String content = r2Client.getObjectContent(fileKey);
-
-            Map<String, String> params = new HashMap<>();
-            params.put("fileName", fileKey);
-            params.put("content", content);
-
-            // Render the JTE template with the parameters
-//            return TemplateRenderer.render("FileContent.jte", params);
-            return content;
+            return r2Client.getObjectContent(fileName);
         } catch (Exception e) {
-            // Handle exceptions and render an error page
-            Map<String, Object> params = new HashMap<>();
-            params.put("errorMessage", "Failed to load file: " + e.getMessage());
-            return "error";
-//            return TemplateRenderer.render("Error.jte", params);
+            return "error ";
         }
     }
+
+    public byte[] getObjectBytes(String fileName) {
+        try {
+            return r2Client.getObjectContentAsBytes(fileName);
+        } catch (S3Exception e) {
+            System.err.println(e.awsErrorDetails().errorMessage());
+            return null;
+        }
+    }
+
+
 }

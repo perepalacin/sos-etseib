@@ -56,13 +56,13 @@ public class FilesController {
                         throw new FileNotFoundException();
                     } else if (files.size() == 1 && Objects.equals(files.getFirst().getName(), route.getLast())){
                         System.out.println("FILE!");
-                        String fileContents = filesService.showFileContent(files.getFirst().getName());
-                        response = FilesView.generateFileView(templateEngine, fileContents, files.getFirst().getName());
+//                        byte[] fileContents = filesService.getObjectBytes(files.getFirst().getName());
+                        byte[] fileContents = filesService.getObjectBytes(files.getFirst().getName());
+                        response = FilesView.generateFileView(templateEngine, fileContents, files.getFirst());
                     } else {
                         response = FilesView.generateDirectoryView(templateEngine, route, files);
                     }
                     responseCode = 200;
-
                 } catch (SQLException e) {
                     response = "Internal server error please try again later";
                     System.out.println("Error with SQL query on registering user " + e.getMessage());
