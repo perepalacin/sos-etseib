@@ -20,7 +20,7 @@ public class FileDao {
     String sharedBy;
 
     public String getFileExtension() {
-        return Arrays.stream(this.getName().split("\\.")).toList().getLast();
+        return Arrays.stream(this.getName().split("\\.")).toList().getLast().toLowerCase();
     }
 
     public boolean isTextFile() {
@@ -35,6 +35,7 @@ public class FileDao {
 
     public boolean isImageFile() {
         String extension = this.getFileExtension();
+        System.out.println(extension);
         return Arrays.asList("jpg", "jpeg", "png", "gif", "bmp", "webp").contains(extension);
     }
 

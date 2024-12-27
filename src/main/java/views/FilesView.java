@@ -62,7 +62,7 @@ public class FilesView {
                         default -> "plaintext"; // Default case if no known extension is matched
                     };
                     params.put("programmingLanguage", programmingLanguage);
-
+                    System.out.println(programmingLanguage);
                 }
                 params.put("content", content);
             } else if (file.isImageFile()) {

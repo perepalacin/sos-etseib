@@ -77,10 +77,6 @@ tr:not(:first-child):hover {
     position: relative;
 }
 
-code {
-  font-family: monospace;
-}
-
 /* GENERAL UTILITIES */
 
 .h-100 {
@@ -181,7 +177,6 @@ code {
     height: 100%;
     width: 100%;
     overflow-y: auto;
-    padding: 1rem 2rem;
     gap: 2rem;
 }
 
