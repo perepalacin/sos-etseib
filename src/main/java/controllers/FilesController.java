@@ -52,11 +52,10 @@ public class FilesController {
                 try {
                     List<FileDao> files = filesService.getFilesFromRoute(route, searchInput);
                     if (files.isEmpty()) {
-                        //TODO: If last crumb is folder -> empty folder, else -> not found
-                        throw new FileNotFoundException();
+                        responseCode = 204;
+                        response = FilesView.generateDirectoryView(templateEngine, route, files);
                     } else if (files.size() == 1 && Objects.equals(files.getFirst().getName(), route.getLast())){
                         System.out.println("FILE!");
-//                        byte[] fileContents = filesService.getObjectBytes(files.getFirst().getName());
                         byte[] fileContents = filesService.getObjectBytes(files.getFirst().getName());
                         response = FilesView.generateFileView(templateEngine, fileContents, files.getFirst());
                     } else {
@@ -66,9 +65,6 @@ public class FilesController {
                 } catch (SQLException e) {
                     response = "Internal server error please try again later";
                     System.out.println("Error with SQL query on registering user " + e.getMessage());
-                } catch (FileNotFoundException e) {
-                    response = "Return cute not found page";
-                    responseCode = 404; //TODO: is it a 404 or a 200?
                 }
                 exchange.sendResponseHeaders(responseCode, response.getBytes(StandardCharsets.UTF_8).length);
                 OutputStream output = exchange.getResponseBody();

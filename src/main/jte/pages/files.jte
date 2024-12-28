@@ -99,6 +99,17 @@
                 </table>
             </nav>
         @endif
+        @if (files.isEmpty())
+            <div class="flex flex-column gap-0-5 align-center w-100">
+                <img width="300" height="300" alt="Drawing of an empty folder" src="/static/images/emptyFolder.webp" style="margin-bottom: 1rem"/>
+                <h2>Ups...</h2>
+                <p>Aquesta carpeta sembla estar buida...</p>
+                <a href="${breadcrumbs.size() > 1 ? breadcrumbs.get(breadcrumbs.size()-2).getRoute() : "/files/root"}">
+                    <button class="btn btn-primary">Torna enrere</button>
+                </a>
+            </div>
+        @endif
+
     </div>
 
     </html>

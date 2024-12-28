@@ -392,6 +392,10 @@ tr > a {
     font-weight: 400;
 }
 
+.image-zoom {
+    cursor: zoom-in;
+}
+
 /* BREAKPOINTS */
 
 @media (min-width: 600px) {

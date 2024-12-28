@@ -2,7 +2,7 @@ package gg.jte.generated.ondemand.pages;
 @SuppressWarnings("unchecked")
 public final class JtefilesGenerated {
 	public static final String JTE_NAME = "pages/files.jte";
-	public static final int[] JTE_LINE_INFO = {0,0,0,0,0,5,5,6,6,7,7,10,10,10,14,14,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,18,18,20,20,21,21,25,25,29,29,30,30,32,32,32,32,32,32,32,32,32,34,34,34,37,37,38,38,41,41,42,42,55,55,56,56,59,59,59,59,59,59,59,59,59,60,60,62,62,64,64,66,66,68,68,70,70,72,72,76,76,76,76,76,76,76,76,76,77,77,77,81,81,81,81,81,81,81,81,81,82,82,82,86,86,86,86,86,86,86,86,86,87,87,87,91,91,91,91,91,91,91,91,91,96,96,97,97,100,100,104,104,104,104,104,0,1,2,3,4,4,4,4};
+	public static final int[] JTE_LINE_INFO = {0,0,0,0,0,5,5,6,6,7,7,10,10,10,14,14,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,18,18,20,20,21,21,25,25,29,29,30,30,32,32,32,32,32,32,32,32,32,34,34,34,37,37,38,38,41,41,42,42,55,55,56,56,59,59,59,59,59,59,59,59,59,60,60,62,62,64,64,66,66,68,68,70,70,72,72,76,76,76,76,76,76,76,76,76,77,77,77,81,81,81,81,81,81,81,81,81,82,82,82,86,86,86,86,86,86,86,86,86,87,87,87,91,91,91,91,91,91,91,91,91,96,96,97,97,100,100,101,101,106,106,106,106,106,106,106,106,106,110,110,115,115,115,115,115,0,1,2,3,4,4,4,4};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, String appTitle, java.util.List<entities.BreadcrumbItem> breadcrumbs, String tabName, boolean isUserLogged, java.util.List<entities.FileDao> files) {
 		String lastCrumb = breadcrumbs.getLast().getRoute();
 		jteOutput.writeContent("\n");
@@ -144,7 +144,20 @@ public final class JtefilesGenerated {
 					}
 					jteOutput.writeContent("\n                </table>\n            </nav>\n        ");
 				}
-				jteOutput.writeContent("\n    </div>\n\n    </html>\n");
+				jteOutput.writeContent("\n        ");
+				if (files.isEmpty()) {
+					jteOutput.writeContent("\n            <div class=\"flex flex-column gap-0-5 align-center w-100\">\n                <img width=\"300\" height=\"300\" alt=\"Drawing of an empty folder\" src=\"/static/images/emptyFolder.webp\" style=\"margin-bottom: 1rem\"/>\n                <h2>Ups...</h2>\n                <p>Aquesta carpeta sembla estar buida...</p>\n                <a");
+					var __jte_html_attribute_8 = breadcrumbs.size() > 1 ? breadcrumbs.get(breadcrumbs.size()-2).getRoute() : "/files/root";
+					if (gg.jte.runtime.TemplateUtils.isAttributeRendered(__jte_html_attribute_8)) {
+						jteOutput.writeContent(" href=\"");
+						jteOutput.setContext("a", "href");
+						jteOutput.writeUserContent(__jte_html_attribute_8);
+						jteOutput.setContext("a", null);
+						jteOutput.writeContent("\"");
+					}
+					jteOutput.writeContent(">\n                    <button class=\"btn btn-primary\">Torna enrere</button>\n                </a>\n            </div>\n        ");
+				}
+				jteOutput.writeContent("\n\n    </div>\n\n    </html>\n");
 			}
 		}, tabName, true);
 	}

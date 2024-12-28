@@ -18,10 +18,21 @@
     <script>hljs.highlightAll();</script>
 @elseif("image".equals(fileType))
     <div>
-        <img id="image" src="data:${mimeType};base64,${base64Content}" alt="${fileName}">
+        <img class="image-zoom" id="image" src="data:${mimeType};base64,${base64Content}" alt="${fileName}">
     </div>
-<%--    <img width="100%" height="100%" src="data:${mimeType};base64,${base64Content}" alt="${fileName}" />--%>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js" integrity="sha512-lZD0JiwhtP4UkFD1mc96NiTZ14L7MjyX5Khk8PMxJszXMLvu7kjq1sp4bb0tcL6MY+/4sIuiUxubOqoueHrW4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.min.js"
+        integrity="sha512-i5q29evO2Z4FHGCO+d5VLrwgre/l+vaud5qsVqQbPXvHmD9obORDrPIGFpP2+ep+HY+z41kAmVFRHqQAjSROmA=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.css"
+        integrity="sha512-c7kgo7PyRiLnl7mPdTDaH0dUhJMpij4aXRMOHmXaFCu96jInpKc8sZ2U6lby3+mOpLSSlAndRtH6dIonO9qVEQ=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    />
 @elseif("pdf".equals(fileType))
     <embed src="data:application/pdf;base64,${base64Content}" type="application/pdf" width="100%" height="100%" />
 

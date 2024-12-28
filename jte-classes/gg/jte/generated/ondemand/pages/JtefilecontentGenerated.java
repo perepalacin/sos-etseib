@@ -2,7 +2,7 @@ package gg.jte.generated.ondemand.pages;
 @SuppressWarnings("unchecked")
 public final class JtefilecontentGenerated {
 	public static final String JTE_NAME = "pages/file-content.jte";
-	public static final int[] JTE_LINE_INFO = {0,0,0,0,0,7,7,7,7,8,8,9,9,9,11,11,13,13,13,18,18,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,22,24,24,25,25,25,25,27,27,29,29,29,29,29,29,29,30,30,31,31,31,31,31,0,1,2,3,4,5,5,5,5};
+	public static final int[] JTE_LINE_INFO = {0,0,0,0,0,7,7,7,7,8,8,9,9,9,11,11,13,13,13,18,18,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,35,35,36,36,36,36,38,38,40,40,40,40,40,40,40,41,41,42,42,42,42,42,0,1,2,3,4,5,5,5,5};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, String fileName, String fileType, String content, String base64Content, String mimeType, String programmingLanguage) {
 		jteOutput.writeContent("\n");
 		gg.jte.generated.ondemand.layout.JtemainGenerated.render(jteOutput, jteHtmlInterceptor, new gg.jte.html.HtmlContent() {
@@ -19,7 +19,7 @@ public final class JtefilecontentGenerated {
 					jteOutput.writeUserContent(content);
 					jteOutput.writeContent("</code>\n    </pre>\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css\">\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\"></script>\n    <script>hljs.highlightAll();</script>\n");
 				} else if ("image".equals(fileType)) {
-					jteOutput.writeContent("\n    <div>\n        <img id=\"image\" src=\"data:");
+					jteOutput.writeContent("\n    <div>\n        <img class=\"image-zoom\" id=\"image\" src=\"data:");
 					jteOutput.setContext("img", "src");
 					jteOutput.writeUserContent(mimeType);
 					jteOutput.setContext("img", null);
@@ -36,8 +36,7 @@ public final class JtefilecontentGenerated {
 						jteOutput.setContext("img", null);
 						jteOutput.writeContent("\"");
 					}
-					jteOutput.writeContent(">\n    </div>\n");
-					jteOutput.writeContent("\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js\" integrity=\"sha512-lZD0JiwhtP4UkFD1mc96NiTZ14L7MjyX5Khk8PMxJszXMLvu7kjq1sp4bb0tcL6MY+/4sIuiUxubOqoueHrW4w==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>\n");
+					jteOutput.writeContent(">\n    </div>\n    <script\n        src=\"https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.min.js\"\n        integrity=\"sha512-i5q29evO2Z4FHGCO+d5VLrwgre/l+vaud5qsVqQbPXvHmD9obORDrPIGFpP2+ep+HY+z41kAmVFRHqQAjSROmA==\"\n        crossorigin=\"anonymous\"\n        referrerpolicy=\"no-referrer\"\n    ></script>\n    <link\n        rel=\"stylesheet\"\n        href=\"https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.css\"\n        integrity=\"sha512-c7kgo7PyRiLnl7mPdTDaH0dUhJMpij4aXRMOHmXaFCu96jInpKc8sZ2U6lby3+mOpLSSlAndRtH6dIonO9qVEQ==\"\n        crossorigin=\"anonymous\"\n        referrerpolicy=\"no-referrer\"\n    />\n");
 				} else if ("pdf".equals(fileType)) {
 					jteOutput.writeContent("\n    <embed src=\"data:application/pdf;base64,");
 					jteOutput.setContext("embed", "src");
