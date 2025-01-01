@@ -55,3 +55,14 @@ const toggleComments = () => {
         }
     }
 }
+
+const handleOpenResponseForm = (formId, triggerButtonId) => {
+    const responseForm = document.getElementById(formId);
+    const triggerButton = document.getElementById(triggerButtonId);
+    if (responseForm && triggerButton) {
+        responseForm.classList.remove("display-none");
+        responseForm.classList.add("flex");
+        responseForm.classList.add("flex-column");
+        triggerButton.style.display = "none";
+    }
+}

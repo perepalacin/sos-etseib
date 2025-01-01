@@ -1,9 +1,7 @@
 package repositories;
 
 import entities.CommentDao;
-import entities.FileDao;
 import entities.FileLikesDao;
-import entities.UserDao;
 import exceptions.UnauthorizedRequestException;
 import org.postgresql.util.PSQLException;
 
@@ -95,13 +93,13 @@ public class FeedbackRepository {
 
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
+            ps.close();
+            connection.close();
             return rs.getBoolean("liked") ? "liked" : "disliked";
         }
-
         rs.close();
         ps.close();
         connection.close();
-
         return null;
     }
 
@@ -114,6 +112,8 @@ public class FeedbackRepository {
 
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
+            ps.close();
+            connection.close();
             return new FileLikesDao(
                     fileId,
                     rs.getInt("likes"),
@@ -252,8 +252,12 @@ public class FeedbackRepository {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
+            int id = rs.getInt("id");
+            rs.close();
+            ps.close();
+            connection.close();
             return new CommentDao(
-                    rs.getInt("id"),
+                    id,
                     parentCommentId,
                     comment,
                     "Tú",
@@ -262,6 +266,7 @@ public class FeedbackRepository {
                     0
             );
         }
+        rs.close();
         ps.close();
         connection.close();
         return null;
@@ -284,6 +289,7 @@ public class FeedbackRepository {
             rs.close();
             throw new UnauthorizedRequestException();
         }
+        rs.close();
     }
 
     public void deleteUserComment(UUID userId, int commentId) throws SQLException, UnauthorizedRequestException {
