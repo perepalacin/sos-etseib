@@ -32,7 +32,7 @@ public class HttpUtils {
         return cookiesMap;
     }
 
-    public static boolean checkSessionMiddleware(HttpExchange exchange) throws SQLException {
+    public static UUID checkSessionMiddleware(HttpExchange exchange) throws SQLException {
         Map<String, String> cookiesMap = HttpUtils.parseCookies(exchange.getRequestHeaders());
         String sessionId = cookiesMap.get("session_id");
 
@@ -40,35 +40,38 @@ public class HttpUtils {
             try {
                 return authService.isUserLoggedIn(UUID.fromString(sessionId));
             } catch (IllegalArgumentException e) {
-                return false;
+                return null;
             }
         }
-        return false;
+        return null;
     }
 
-    public static void protectedRoutesMiddleware(HttpExchange exchange) throws IOException {
-        boolean loggedIn = false;
+    public static UUID protectedRoutesMiddleware(HttpExchange exchange) throws IOException {
+        UUID loggedUserId = null;
         try {
-            loggedIn = HttpUtils.checkSessionMiddleware(exchange);
+            loggedUserId = HttpUtils.checkSessionMiddleware(exchange);
         } catch (SQLException e) {
             exchange.getResponseHeaders().set("Location", "/500");
             exchange.sendResponseHeaders(302, -1);
         }
-        if (!loggedIn) {
+        if (loggedUserId != null) {
+            return loggedUserId;
+        } else {
             exchange.getResponseHeaders().set("Location", "/sign-in");
             exchange.sendResponseHeaders(302, -1);
+            return null;
         }
     }
 
     public static void avoidDuplicateLoginMiddleware(HttpExchange exchange) throws IOException {
-        boolean loggedIn = false;
+        UUID loggedIn = null;
         try {
             loggedIn = HttpUtils.checkSessionMiddleware(exchange);
         } catch (SQLException e) {
             exchange.getResponseHeaders().set("Location", "/500");
             exchange.sendResponseHeaders(302, -1);
         }
-        if (loggedIn) {
+        if (loggedIn != null) {
             exchange.getResponseHeaders().set("Location", "/files/root");
             exchange.sendResponseHeaders(302, -1);
         }

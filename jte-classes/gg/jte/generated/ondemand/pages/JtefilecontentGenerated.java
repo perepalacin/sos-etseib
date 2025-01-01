@@ -2,8 +2,8 @@ package gg.jte.generated.ondemand.pages;
 @SuppressWarnings("unchecked")
 public final class JtefilecontentGenerated {
 	public static final String JTE_NAME = "pages/file-content.jte";
-	public static final int[] JTE_LINE_INFO = {0,0,0,0,0,7,7,7,7,8,8,9,9,9,11,11,13,13,13,18,18,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,35,35,36,36,36,36,38,38,40,40,40,40,40,40,40,41,41,42,42,42,42,42,0,1,2,3,4,5,5,5,5};
-	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, String fileName, String fileType, String content, String base64Content, String mimeType, String programmingLanguage) {
+	public static final int[] JTE_LINE_INFO = {0,0,0,0,0,8,8,8,8,9,9,10,10,10,12,12,14,14,14,19,19,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,36,36,37,37,37,37,39,39,41,41,41,41,41,41,41,42,42,43,43,43,43,43,0,1,2,3,4,5,6,6,6,6};
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, String fileName, String fileType, int fileId, String content, String base64Content, String mimeType, String programmingLanguage) {
 		jteOutput.writeContent("\n");
 		gg.jte.generated.ondemand.layout.JtemainGenerated.render(jteOutput, jteHtmlInterceptor, new gg.jte.html.HtmlContent() {
 			public void writeTo(gg.jte.html.HtmlTemplateOutput jteOutput) {
@@ -55,15 +55,16 @@ public final class JtefilecontentGenerated {
 				}
 				jteOutput.writeContent("\n");
 			}
-		}, fileName, true);
+		}, fileName, true, fileId);
 	}
 	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {
 		String fileName = (String)params.get("fileName");
 		String fileType = (String)params.get("fileType");
+		int fileId = (int)params.get("fileId");
 		String content = (String)params.get("content");
 		String base64Content = (String)params.get("base64Content");
 		String mimeType = (String)params.get("mimeType");
 		String programmingLanguage = (String)params.get("programmingLanguage");
-		render(jteOutput, jteHtmlInterceptor, fileName, fileType, content, base64Content, mimeType, programmingLanguage);
+		render(jteOutput, jteHtmlInterceptor, fileName, fileType, fileId, content, base64Content, mimeType, programmingLanguage);
 	}
 }

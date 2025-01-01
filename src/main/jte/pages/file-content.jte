@@ -1,11 +1,12 @@
 @param String fileName
 @param String fileType
+@param int fileId
 @param String content
 @param String base64Content
 @param String mimeType
 @param String programmingLanguage
 
-@template.layout.main(isUserLogged = true, appName = fileName,content = @`
+@template.layout.main(fileId = fileId, isUserLogged = true, appName = fileName,content = @`
 @if("text".equals(fileType))
     <pre>${content}</pre>
 

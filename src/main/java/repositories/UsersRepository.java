@@ -1,13 +1,15 @@
 package repositories;
 
-import entities.UserDao;
-import exceptions.InvalidCredentialsException;
-import exceptions.UserNotFoundException;
-import lombok.Generated;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.UUID;
+
 import org.postgresql.util.PSQLException;
 
-import java.sql.*;
-import java.util.UUID;
+import entities.UserDao;
 
 public class UsersRepository {
 
@@ -115,15 +117,19 @@ public class UsersRepository {
         }
     }
 
-    public boolean isSessionValid(UUID sessionId) throws SQLException {
-        String sql = "SELECT 1 FROM sessions WHERE session_id = ? AND expiration_date > CURRENT_TIMESTAMP;";
+    public UUID isSessionValid(UUID sessionId) throws SQLException {
+        String sql = "SELECT user_id FROM sessions WHERE session_id = ? AND expiration_date > CURRENT_TIMESTAMP;";
         try (Connection connection = DatabaseConnectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
-
+    
             ps.setObject(1, sessionId);
             ResultSet rs = ps.executeQuery();
-
-            return rs.next();
+    
+            if (rs.next()) {
+                return (UUID) rs.getObject("user_id");
+            } else {
+                return null;
+            }
         }
     }
 

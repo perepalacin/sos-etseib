@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import com.sun.net.httpserver.HttpServer;
 
 import entities.FileDao;
-import exceptions.FileNotFoundException;
 import gg.jte.TemplateEngine;
 import services.FilesService;
 import views.FilesView;
@@ -65,6 +64,9 @@ public class FilesController {
                 } catch (SQLException e) {
                     response = "Internal server error please try again later";
                     System.out.println("Error with SQL query on registering user " + e.getMessage());
+                } catch (Exception e) {
+                    response = FilesView.generate404FileView(templateEngine);
+                    responseCode = 404;
                 }
                 exchange.sendResponseHeaders(responseCode, response.getBytes(StandardCharsets.UTF_8).length);
                 OutputStream output = exchange.getResponseBody();

@@ -40,6 +40,7 @@ public class FilesView {
             TemplateOutput output = new StringOutput();
             Map<String, Object> params = new HashMap<>();
             params.put("fileName", file.getName());
+            params.put("fileId", file.getId());
             String fileType;
             String programmingLanguage;
             if (file.isTextFile() || file.isCodeFile()) {
@@ -85,6 +86,23 @@ public class FilesView {
         } catch (Exception e) {
             e.printStackTrace();
             // TODO: Return a 500 error page
+            return "Failed to compute";
+        }
+    }
+
+    public static String generate404FileView(TemplateEngine templateEngine) {
+        try {
+            TemplateOutput output = new StringOutput();
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("appTitle", "SOS - ETSEIB: Q2");
+            params.put("tabName", "SOS - ETSEIB: Folder1");
+
+            templateEngine.render("pages/file-error-page.jte", params, output);
+            return output.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO: return 500 page
             return "Failed to compute";
         }
     }

@@ -79,7 +79,7 @@ public class AuthService {
         emailService.sendVerificationEmail(userEmail, username, "http://localhost:8000/validation/" + validationCode + "?email="+ userEmail);
     }
 
-    public boolean isUserLoggedIn(UUID sessionId) throws SQLException {
+    public UUID isUserLoggedIn(UUID sessionId) throws SQLException {
         return usersRepository.isSessionValid(sessionId);
     }
 

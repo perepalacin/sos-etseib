@@ -1,5 +1,6 @@
 import com.sun.net.httpserver.HttpServer;
 import controllers.AuthController;
+import controllers.FeedbackController;
 import controllers.FilesController;
 
 import java.io.IOException;
@@ -35,5 +36,7 @@ public class Main {
         server.start();
         new FilesController(server, templateEngine);
         new AuthController(server, templateEngine);
+        new FeedbackController(server, templateEngine);
+
     }
 }

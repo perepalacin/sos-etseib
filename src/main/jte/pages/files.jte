@@ -8,7 +8,7 @@
 !{boolean hasFiles = files.stream().anyMatch(fileDao -> "file".equals(fileDao.getType()));}
 
 
-@template.layout.main(isUserLogged = true, appName = tabName,content = @`
+@template.layout.main(fileId = -1, isUserLogged = true, appName = tabName,content = @`
     <div class="w-100 flex flex-column gap-1 align-start" style="padding: 1rem 2rem;">
         <nav aria-label="breadcrumb" class="w-100">
             <ol class="breadcrumb w-100">
@@ -100,7 +100,7 @@
             </nav>
         @endif
         @if (files.isEmpty())
-            <div class="flex flex-column gap-0-5 align-center w-100">
+            <div class="flex flex-column gap-0.5 align-center w-100">
                 <img width="300" height="300" alt="Drawing of an empty folder" src="/static/images/emptyFolder.webp" style="margin-bottom: 1rem"/>
                 <h2>Ups...</h2>
                 <p>Aquesta carpeta sembla estar buida...</p>
@@ -109,8 +109,5 @@
                 </a>
             </div>
         @endif
-
     </div>
-
-    </html>
 `)

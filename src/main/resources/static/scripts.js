@@ -19,25 +19,39 @@ if (searchInput) {
 });
 }
 
-const gallery = document.getElementById('gallery');
-const viewer = new Viewer(document.getElementById('image'), {
-	toolbar: {
-        zoomIn: 4,
-        zoomOut: 4,
-        oneToOne: 4,
-        reset: 4,
-        rotateLeft: 4,
-        rotateRight: 4,
-        flipHorizontal: 4,
-        flipVertical: 4,
-		download() {
-			const a = document.createElement('a');
+const imageView = document.getElementById('image');
+if (imageView) {
+    const viewer = new Viewer(imageView, {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 4,
+            rotateLeft: 4,
+            rotateRight: 4,
+            flipHorizontal: 4,
+            flipVertical: 4,
+            download() {
+                const a = document.createElement('a');
 
-			a.href = viewer.image.src;
-			a.download = viewer.image.alt;
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-		},
-	},
-});
+                a.href = viewer.image.src;
+                a.download = viewer.image.alt;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            },
+        },
+    });
+}
+
+
+const toggleComments = () => {
+    const comments = document.getElementById('comments-container');
+    if (comments) {
+        if (comments.classList.contains("expanded")) {
+            comments.classList.remove("expanded");
+        } else {
+            comments.classList.add("expanded");
+        }
+    }
+}

@@ -39,6 +39,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 
+textarea {
+   font-family: "Inter", serif;
+   font-optical-sizing: auto;
+   resize: none;
+}
+
 a:visited { text-decoration: none; color:black; }
 a:hover { text-decoration: none; color:black; }
 a:focus { text-decoration: none; color:black; }
@@ -83,6 +89,10 @@ tr:not(:first-child):hover {
     height: 100%;
 }
 
+.max-height-85 {
+    max-height: 85vh;
+};
+
 .semi-bold {
     font-weight: 600;
 }
@@ -115,7 +125,11 @@ tr:not(:first-child):hover {
     align-items: center;
 }
 
-.gap-05 {
+.align-end {
+    align-items: end;
+}
+
+.gap-0-5 {
     gap: 0.5rem;
 }
 
@@ -160,6 +174,14 @@ tr:not(:first-child):hover {
     padding-bottom: 0.5rem;
 }
 
+.m-0 {
+    margin: 0;
+}
+
+.mb-1 {
+    margin-bottom: 1rem;
+}
+
 /* SPECIFIC CLASSES */
 
 .logo {
@@ -169,8 +191,8 @@ tr:not(:first-child):hover {
 
 .content {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: start;
     justify-content: start;
     border-radius: 0.5rem;
     background-color: white;
@@ -178,6 +200,57 @@ tr:not(:first-child):hover {
     width: 100%;
     overflow-y: auto;
     gap: 2rem;
+    scrollbar-width: none; /* For Firefox */
+}
+
+.content::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+}
+
+.community-content {
+    width: 0%;
+    transition: width 0.5s;
+    display: flex;
+    flex-direction: column;
+    padding: 0rem 0rem;
+    padding-left: 2rem;
+}
+
+.community-content:not(.expanded) > div {
+    display: none;
+}
+
+.expanded > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.expanded {
+    width: 30%;
+}
+
+.comment-input {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px #CFCFCF solid;
+    font-size: 1rem;
+    transition: height 0.3s;
+    height: 8em;
+}
+
+.comment {
+    padding: 1rem 0rem;
+    border-top: 1px #CFCFCF solid;
+}
+
+.comment-user {
+    font-size: 0.75rem;
+    font-weight: 300;
+    margin: 0;
+}
+
+.comment-content {
+    margin: 0;
 }
 
 .breadcrumb {
@@ -248,6 +321,45 @@ tr:not(:first-child):hover {
     justify-content: center;
     align-items: center;
     gap: 0.5rem
+    cursor: pointer;
+}
+
+.btn-icon {
+    padding: 0.5rem;
+    border-radius: 100%;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #F8FAFD;
+    cursor: pointer;
+}
+
+.text-button {
+    border: none;
+    font-weight: 400;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem
+    cursor: pointer;
+    color: #0D6EFD;
+    background-color: transparent;
+    margin-top: 0.5rem;
+}
+
+.text-button:hover {
+    text-decoration: underline;
+}
+
+.btn-icon:hover {
+    background-color: #dcdfe3;
+}
+
+.btn-icon:active {
+    background-color: #d2d5d9;
 }
 
 button p {
@@ -381,10 +493,10 @@ tr > a {
     position: relative;
 }
 
-.search-div i {
+.search-div svg {
     height: 100%;
     position: absolute;
-    transform: translateY(32%) translateX(100%);
+    transform: translateY(2%) translateX(60%);
 }
 
 .error-message {
