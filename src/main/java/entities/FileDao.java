@@ -11,13 +11,18 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class FileDao {
-    int id;
-    int parent_id;
-    String name;
-    String type;
-    String s3_url;
-    Date createdAt;
-    String sharedBy;
+    public int id;
+    public int parent_id;
+    public String name;
+    public String type;
+    public String s3_url;
+    public Date createdAt;
+    public String sharedBy;
+    public boolean userLiked;
+    public boolean userDisliked;
+    public int likes;
+    public int dislikes;
+    public int commentsCount;
 
     public String getFileExtension() {
         return Arrays.stream(this.getName().split("\\.")).toList().getLast().toLowerCase();

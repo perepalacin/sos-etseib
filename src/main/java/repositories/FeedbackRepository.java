@@ -1,7 +1,7 @@
 package repositories;
 
 import entities.CommentDao;
-import entities.FileLikesDao;
+import entities.FileFeedbackDao;
 import exceptions.UnauthorizedRequestException;
 import org.postgresql.util.PSQLException;
 
@@ -26,7 +26,7 @@ public class FeedbackRepository {
         String createSqlTable = "CREATE TABLE IF NOT EXISTS likes ( " +
                 "id SERIAL PRIMARY KEY, " +
                 "file_id INTEGER REFERENCES files(id) ON DELETE CASCADE, " +
-                "liked BOOLEAN NOT NULL DEFAULT True, " +
+                "liked INTEGER NOT NULL DEFAULT 1 , " + //0 == dislike, 1 == like
                 "user_id UUID REFERENCES users(id) ON DELETE CASCADE," +
                 "UNIQUE (user_id, file_id));";
 
@@ -47,7 +47,8 @@ public class FeedbackRepository {
                 "id SERIAL PRIMARY KEY, " +
                 "file_id INTEGER REFERENCES files(id) ON DELETE CASCADE, " +
                 "likes INTEGER NOT NULL DEFAULT 0, " +
-                "dislikes INTEGER NOT NULL DEFAULT 0);";
+                "dislikes INTEGER NOT NULL DEFAULT 0, " +
+                "comments_count INTEGER NOT NULL DEFAULT 0);";
 
         try (Connection connection = DatabaseConnectionPool.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(createSqlTable)) {
@@ -103,7 +104,7 @@ public class FeedbackRepository {
         return null;
     }
 
-    private FileLikesDao findFileLikesByFileId(int fileId) throws SQLException {
+    private FileFeedbackDao findFileLikesByFileId(int fileId) throws SQLException {
         String sql = "SELECT likes, dislikes FROM aggregated_likes WHERE file_id = ?;";
         Connection connection = DatabaseConnectionPool.getConnection();
         PreparedStatement ps = connection.prepareStatement(sql);
@@ -114,10 +115,11 @@ public class FeedbackRepository {
         if (rs.next()) {
             ps.close();
             connection.close();
-            return new FileLikesDao(
+            return new FileFeedbackDao(
                     fileId,
                     rs.getInt("likes"),
                     rs.getInt("dislikes"),
+                    0,
                     false,
                     false
             );
@@ -130,7 +132,7 @@ public class FeedbackRepository {
         return null;
     }
 
-    public FileLikesDao saveUserLike(UUID userId, int fileId, boolean isLiked) throws PSQLException, SQLException {
+    public FileFeedbackDao saveUserLike(UUID userId, int fileId, boolean isLiked) throws PSQLException, SQLException {
         String firstSQLQuery = "INSERT INTO likes (user_id, file_id, liked) VALUES (?, ?, ?);";
 
         Connection connection = DatabaseConnectionPool.getConnection();
@@ -142,7 +144,7 @@ public class FeedbackRepository {
 
         ps.executeUpdate();
 
-        FileLikesDao fileLikes = findFileLikesByFileId(fileId);
+        FileFeedbackDao fileLikes = findFileLikesByFileId(fileId);
 
         if (fileLikes == null) {
             String secondSQLQuery = "INSERT INTO aggregated_likes (file_id, likes, dislikes) VALUES (?, ?, ?);";
@@ -156,7 +158,7 @@ public class FeedbackRepository {
             ps2.close();
             connection.close();
 
-            return new FileLikesDao(fileId, isLiked ? 1 : 0, isLiked ? 0 : 1, isLiked, !isLiked);
+            return new FileFeedbackDao(fileId, isLiked ? 1 : 0, isLiked ? 0 : 1, 0, isLiked, !isLiked);
         } else {
             String secondSQLQuery = "UPDATE aggregated_likes SET likes = ?, dislikes = ? WHERE file_id = ?;";
             PreparedStatement ps2 = connection.prepareStatement(secondSQLQuery);
@@ -169,11 +171,49 @@ public class FeedbackRepository {
             ps2.close();
             connection.close();
 
-            return new FileLikesDao(fileId, isLiked ? fileLikes.getLikes() + 1 : fileLikes.getLikes(), isLiked ? fileLikes.getDislikes() : fileLikes.getDislikes() + 1, isLiked, !isLiked);
+            return new FileFeedbackDao(fileId, isLiked ? fileLikes.getLikes() + 1 : fileLikes.getLikes(), isLiked ? fileLikes.getDislikes() : fileLikes.getDislikes() + 1, 0, isLiked, !isLiked);
         }
     }
 
-    public FileLikesDao removeUserLike(UUID userId, int fileId, boolean isLiked) throws PSQLException, SQLException {
+    public FileFeedbackDao fetchFileFeedback(UUID userId, int fileId) throws SQLException {
+        String sqlQuery = "select ( " +
+                "(select count(*) from comments where comments.file_id = ? ) AS comments_count, " +
+                "aggregated_likes.likes AS likes, " +
+                "aggregated_likes.dislikes AS dislikes, " +
+                "likes.liked " +
+                "from files " +
+                "left join aggregated_likes " +
+                "on aggregated_likes.file_id = ? " +
+                "left join likes " +
+                "on likes.file_id = ? AND likes.user_id = ? " +
+                "where files.id = ?;";
+
+        Connection connection = DatabaseConnectionPool.getConnection();
+        PreparedStatement ps = connection.prepareStatement(sqlQuery);
+
+        ps.setInt(1, fileId);
+        ps.setInt(2, fileId);
+        ps.setInt(3, fileId);
+        ps.setObject(4, userId);
+        ps.setInt(5, fileId);
+
+        ResultSet rs = ps.executeQuery();
+
+        ps.close();
+        connection.close();
+        if (rs.next()) {
+            int commentsCount = rs.getInt("comments_count");
+            int likes = rs.getInt("likes");
+            int dislikes = rs.getInt("dislikes");
+            int liked = rs.getInt("liked");
+            rs.close();
+            return new FileFeedbackDao(fileId, likes, dislikes, commentsCount, liked == 1, liked == 0);
+        }
+        rs.close();
+        return null;
+    }
+
+    public FileFeedbackDao removeUserLike(UUID userId, int fileId, boolean isLiked) throws PSQLException, SQLException {
         String firstSQLQuery = "DELETE FROM likes WHERE file_id = ? AND user_id = ?";
 
         Connection connection = DatabaseConnectionPool.getConnection();
@@ -184,7 +224,7 @@ public class FeedbackRepository {
 
         ps.executeUpdate();
 
-        FileLikesDao fileLikes = findFileLikesByFileId(fileId);
+        FileFeedbackDao fileLikes = findFileLikesByFileId(fileId);
 
         if (fileLikes == null) {
             ps.close();
@@ -202,11 +242,11 @@ public class FeedbackRepository {
             ps2.close();
             connection.close();
 
-            return new FileLikesDao(fileId, isLiked ? fileLikes.getLikes() -1 : fileLikes.getLikes(), isLiked ? fileLikes.getDislikes() : fileLikes.getDislikes() - 1, false, false);
+            return new FileFeedbackDao(fileId, isLiked ? fileLikes.getLikes() -1 : fileLikes.getLikes(), isLiked ? fileLikes.getDislikes() : fileLikes.getDislikes() - 1, 0, false, false);
         }
     }
 
-    public FileLikesDao editUserLike(UUID userId, int fileId, boolean swapToLiked) throws PSQLException, SQLException {
+    public FileFeedbackDao editUserLike(UUID userId, int fileId, boolean swapToLiked) throws PSQLException, SQLException {
         String firstSQLQuery = "UPDATE likes SET liked = ? WHERE file_id = ? AND user_id = ?";
 
         Connection connection = DatabaseConnectionPool.getConnection();
@@ -218,7 +258,7 @@ public class FeedbackRepository {
 
         ps.executeUpdate();
 
-        FileLikesDao fileLikes = findFileLikesByFileId(fileId);
+        FileFeedbackDao fileLikes = findFileLikesByFileId(fileId);
 
         if (fileLikes == null) {
             ps.close();
@@ -234,7 +274,7 @@ public class FeedbackRepository {
             ps.close();
             ps2.close();
             connection.close();
-            return new FileLikesDao(fileId, swapToLiked ? fileLikes.getLikes()  + 1 : fileLikes.getLikes() - 1, swapToLiked ? fileLikes.getDislikes() - 1 : fileLikes.getDislikes() + 1, true, false);
+            return new FileFeedbackDao(fileId, swapToLiked ? fileLikes.getLikes()  + 1 : fileLikes.getLikes() - 1, swapToLiked ? fileLikes.getDislikes() - 1 : fileLikes.getDislikes() + 1, 0, true, false);
         }
     }
 

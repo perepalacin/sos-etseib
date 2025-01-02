@@ -2,9 +2,7 @@ package controllers;
 
 import com.sun.net.httpserver.HttpServer;
 import entities.CommentDao;
-import entities.FileLikesDao;
 import entities.dto.CommentDto;
-import entities.dto.UserDto;
 import exceptions.BadRequestException;
 import exceptions.UnauthorizedRequestException;
 import gg.jte.TemplateEngine;
@@ -55,8 +53,9 @@ public class FeedbackController {
                 }
                 try {
                     if (action != null) {
-                        FileLikesDao filesLikesDao = feedbackService.manageFileLike(userId, fileId, action);
-                        response = FeedbackViews.generateUpdatedLikesView(templateEngine, filesLikesDao);
+                        //TODO: manage likes!
+//                        FileFeedbackDao filesLikesDao = feedbackService.manageFileLike(userId, fileId, action);
+//                        response = FeedbackViews.generateUpdatedLikesView(templateEngine, filesLikesDao);
                     } else {
                         CommentDto commentDto = BodyParser.parseRequestBody(exchange, CommentDto.class);
                         if (commentDto != null && commentDto.getCommentContent() != "") {

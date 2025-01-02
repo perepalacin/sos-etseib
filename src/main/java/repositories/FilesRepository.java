@@ -94,11 +94,12 @@ public class FilesRepository {
                 "        t.created_at, " +
                 "        t.shared_by, " +
                 "        t.level " +
+                "        al.likes, " +
+                "        al.dislikes " +
                 "    FROM target_item t " +
+                "    LEFT JOIN aggregated_likes al ON al.file_id = t.id " +
                 "    WHERE t.type = 'file' " +
-                " " +
                 "    UNION ALL " +
-                " " +
                 "    SELECT " +
                 "        i.id, " +
                 "        i.parent_id, " +
@@ -108,8 +109,11 @@ public class FilesRepository {
                 "        i.created_at, " +
                 "        i.shared_by, " +
                 "        t.level + 1 AS level " +
+                "        al.likes, " +
+                "        al.dislikes " +
                 "    FROM files i " +
                 "    JOIN target_item t ON i.parent_id = t.id " +
+                "    LEFT JOIN aggregated_likes al ON al.file_id = i.id " +
                 "    WHERE t.type = 'folder' " +
                 ") " +
                 "SELECT * " +
@@ -132,8 +136,9 @@ public class FilesRepository {
             String s3Url = rs.getString("s3_url");
             Date createdAt = rs.getDate("created_at");
             String sharedBy = rs.getString("shared_by");
-
-            FileDao file = new FileDao(id, parentId, name, type, s3Url, createdAt, sharedBy);
+            int likes = rs.getInt("likes");
+            int dislikes = rs.getInt("dislikes");
+            FileDao file = new FileDao(id, parentId, name, type, s3Url, createdAt, sharedBy, false, false, likes, dislikes, 0);
             files.add(file);
         }
         rs.close();
@@ -185,7 +190,7 @@ public class FilesRepository {
             Date createdAt = rs.getDate("created_at");
             String sharedBy = rs.getString("shared_by");
 
-            FileDao file = new FileDao(id, parentId, name, type, s3Url, createdAt, sharedBy);
+            FileDao file = new FileDao(id, parentId, name, type, s3Url, createdAt, sharedBy, false, false, 0, 0, 0);
             files.add(file);
         }
         rs.close();

@@ -49,6 +49,7 @@ public class FilesController {
                     searchInput = queryParams.get("search");
                 }
                 try {
+                    //TODO: HERE we should get also the comments and likes! in the same query!!
                     List<FileDao> files = filesService.getFilesFromRoute(route, searchInput);
                     if (files.isEmpty()) {
                         responseCode = 204;

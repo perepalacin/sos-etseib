@@ -61,7 +61,7 @@
         @endfor
     </ul>
     <div class="w-100 flex flex-row justify-end" style="margin-top: 0.5rem">
-        <form id="response-form-${parentCommentId}" hx-post="/api/v1/feedback?fileId=${fileId}&parentCommentId=${parentCommentId}" hx-trigger="submit" hx-target="#nested-comments-${parentCommentId}" hx-swap="beforeend" hx-target-error="#toast" class="w-100 display-none gap-0-5 align-end" hx-on:htmx:before-swap="if (event.detail.shouldSwap) this.reset();">
+        <form id="response-form-${parentCommentId}" hx-post="/api/v1/feedback?fileId=${fileId}&parentCommentId=${parentCommentId}" hx-trigger="submit" hx-target="#nested-comments-${parentCommentId}" hx-swap="beforeend" hx-target-error="#toast" class="w-100 display-none gap-0-5 align-end" hx-on:htmx:before-swap="if (event.detail.shouldSwap) this.reset();"x>
             <textarea type="text" name="commentContent" maxlength="250" class="w-100 comment-input" placeholder="Escriu la teva resposta"></textarea>
             <button type="submit" style="padding: 0.5rem 0.5rem; width: 50%" class="btn btn-primary">
                 Respondre
